@@ -13,7 +13,7 @@ Jeremy is going to rock the daily fantasy basketball contest!
 ## Reference
 ### Data source:
 + for NBA stats: http://www.basketball.reference.com
-+ for draftking salary: http://rotoguru1.com/cgi.bin/hyday.pl?game=dk .
++ for draftking salary: http://rotoguru1.com/cgi-bin/hyday.pl?game=dk
 
 ### DFS reference websites:
 + https://rotogrinders.com
