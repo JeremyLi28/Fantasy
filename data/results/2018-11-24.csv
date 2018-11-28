@@ -1,0 +1,232 @@
+,Date,GID,Pos,Name,Starter,DK Pts,DK Salary,Team,H/A,Oppt,Team Score,Oppt Score,Minutes,Stat line
+0,20181124,4224,PG/SG,James Harden,1,66.0,"$11,100",hou,A,cle,108,117,43.63,40pt 4rb 13as 1st 9to 5trey 14-30fg 7-12ft
+1,20181124,4079,PG,Russell Westbrook,1,51.5,"$10,700",okc,H,den,98,105,39.48,16pt 10rb 12as 1st 4to 1trey 6-23fg 3-7ft
+2,20181124,4494,SG,Bradley Beal,1,45.0,"$7,400",was,H,nor,124,114,44.50,18pt 6rb 8as 1st 3bl 2to 1trey 7-15fg 3-7ft
+3,20181124,4266,PG/SG,Eric Bledsoe,1,45.0,"$6,900",mil,H,sas,135,129,34.83,20pt 4rb 10as 2st 2to 1trey 8-15fg 3-4ft
+4,20181124,4954,PG/SG,Jamal Murray,1,43.5,"$6,300",den,A,okc,105,98,39.67,22pt 8rb 8as 3to 2trey 9-23fg 2-2ft
+5,20181124,4321,PG,John Wall,1,42.75,"$8,500",was,H,nor,124,114,34.47,22pt 7rb 8as 1st 5to 1trey 8-16fg 5-10ft
+6,20181124,4706,PG/SG,Zach LaVine,1,42.0,"$7,800",chi,A,min,96,111,37.93,28pt 8rb 4as 4to 9-17fg 10-12ft
+7,20181124,3882,PG/SG,Jose Barea,,39.75,"$4,500",dal,H,bos,113,104,26.32,20pt 3rb 8as 2st 2to 2trey 9-16fg 0-1ft
+8,20181124,4212,PG/SG,Jrue Holiday,1,38.25,"$8,600",nor,A,was,114,124,36.03,16pt 5rb 9as 1st 1bl 4to 1trey 7-18fg 1-2ft
+9,20181124,4367,SG,Klay Thompson,1,38.0,"$6,700",gsw,H,sac,117,116,36.28,31pt 4rb 1to 5trey 12-26fg 2-2ft
+10,20181124,4379,PG,Kyrie Irving,1,37.75,"$8,700",bos,A,dal,104,113,34.55,19pt 5rb 6as 2st 1bl 5to 9-24fg 1-1ft
+11,20181124,5721,PG,Collin Sexton,1,36.0,"$5,100",cle,H,hou,117,108,33.65,29pt 4rb 2as 3to 1trey 14-21fg
+12,20181124,5670,PG,Luka Doncic,1,35.0,"$7,200",dal,H,bos,113,104,30.87,15pt 8as 3st 1bl 3to 3trey 5-11fg 2-2ft
+13,20181124,4668,PG/SG,Jordan Clarkson,,33.25,"$5,200",cle,H,hou,117,108,27.90,20pt 5rb 4as 1st 2to 8-16fg 4-4ft
+14,20181124,4073,PG/SG,Derrick Rose,,33.0,"$6,500",min,H,chi,111,96,31.13,22pt 2rb 4as 1bl 1to 2trey 9-13fg 2-2ft
+15,20181124,5013,PG/SG,Malcolm Brogdon,1,32.25,"$5,000",mil,H,sas,135,129,34.53,23pt 3rb 3as 1to 3trey 10-15fg
+16,20181124,4483,PG/SG,Austin Rivers,,31.5,"$3,200",was,H,nor,124,114,26.98,18pt 2rb 2as 2st 2bl 1to 1trey 8-11fg 1-1ft
+17,20181124,4221,PG,Jeff Teague,1,31.0,"$6,000",min,H,chi,111,96,28.33,18pt 4rb 5as 2to 3trey 7-10fg 1-1ft
+18,20181124,4677,PG/SG,Marcus Smart,,26.5,"$3,700",bos,A,dal,104,113,25.18,19pt 2rb 2as 1st 3to 3trey 5-8fg 6-6ft
+19,20181124,5132,PG,De'Aaron Fox,1,25.5,"$7,000",sac,A,gsw,116,117,33.82,9pt 2rb 9as 1bl 3to 3-14fg 3-4ft
+20,20181124,4595,PG/SG,Dennis Schroder,,25.5,"$6,000",okc,H,den,98,105,29.50,18pt 2rb 2as 1st 2to 2trey 5-14fg 6-6ft
+21,20181124,4995,PG/SG,Bryn Forbes,1,24.0,"$3,900",sas,A,mil,129,135,30.52,18pt 2rb 1as 1st 2to 2trey 8-11fg
+22,20181124,4863,PG,Quinn Cook,1,23.5,"$4,900",gsw,H,sac,117,116,29.22,6pt 6rb 5as 1bl 1to 2trey 2-11fg
+23,20181124,3637,PG/SG,Devin Harris,,20.0,"$3,400",dal,H,bos,113,104,17.08,9pt 4rb 1as 2st 1to 2trey 3-8fg 1-2ft
+24,20181124,5184,SG,Sterling Brown,,19.5,"$3,000",mil,H,sas,135,129,16.00,11pt 2rb 2as 1st 1to 3trey 4-6fg
+25,20181124,5191,PG,Monte Morris,,19.5,"$4,200",den,A,okc,105,98,20.28,4pt 2rb 6as 2st 1-5fg 2-2ft
+26,20181124,4876,PG,Tyus Jones,,19.5,"$3,400",min,H,chi,111,96,19.67,5pt 6rb 2as 2st 1-2fg 3-4ft
+27,20181124,4245,PG/SG,Patty Mills,,18.0,"$3,500",sas,A,mil,129,135,22.80,9pt 2rb 3as 1bl 2-3fg 5-7ft
+28,20181124,4918,SG,Timothe Luwawu,1,14.75,"$3,200",okc,H,den,98,105,20.95,3pt 5rb 1as 1st 1bl 1to 1trey 1-6fg
+29,20181124,5752,SG,Deonte Burton,,12.5,"$3,000",okc,H,den,98,105,13.98,8pt 2rb 1st 4-6fg
+30,20181124,5228,PG,Antonio Blakeney,,11.5,"$3,200",chi,A,min,96,111,19.53,8pt 2rb 2trey 2-7fg 2-4ft
+31,20181124,4610,PG/SG,Matthew Dellavedova,,11.25,"$3,000",mil,H,sas,135,129,10.22,5pt 1rb 3as 1trey 2-2fg
+32,20181124,3651,PG,Shaun Livingston,,10.5,"$3,000",gsw,H,sac,117,116,16.12,4pt 3as 1bl 2-5fg
+33,20181124,4911,SG,Damion Lee,,10.25,"$3,000",gsw,H,sac,117,116,16.45,5pt 3rb 1as 1to 1trey 1-3fg 2-2ft
+34,20181124,4823,PG/SG,Terry Rozier,,9.75,"$4,000",bos,A,dal,104,113,17.28,4pt 1rb 3as 1to 1trey 1-6fg 1-2ft
+35,20181124,4999,SG,Malik Beasley,,9.25,"$3,100",den,A,okc,105,98,12.72,5pt 3rb 1trey 2-6fg
+36,20181124,5153,PG,Frank Mason III,,8.5,"$3,200",sac,A,gsw,116,117, 6.78,4pt 2as 1st 1to 1-3fg 2-2ft
+37,20181124,4980,PG/SG,Tomas Satoransky,,8.25,"$3,500",was,H,nor,124,114,15.03,2pt 3rb 1as 1st 2to 1-3fg
+38,20181124,4962,PG,Ryan Arcidiacono,1,8.25,"$3,700",chi,A,min,96,111,33.70,0pt 1rb 4as 1st 2to 0-5fg
+39,20181124,5249,PG,Shaquille Harrison,,7.75,"$3,600",chi,A,min,96,111,14.30,0pt 1rb 3as 1st 0-3fg 0-2ft
+40,20181124,5168,PG,Frank Jackson,,7.25,"$3,000",nor,A,was,114,124,20.72,5pt 1rb 1as 1to 2-9fg 1-2ft
+41,20181124,4948,PG,Andrew Harrison,,6.5,"$3,300",cle,H,hou,117,108,14.35,4pt 2as 1to 2-4fg
+42,20181124,5148,PG,Derrick White,,6.25,"$3,700",sas,A,mil,129,135, 5.37,2pt 1rb 2as 1-3fg
+43,20181124,4575,PG,Michael Carter-Williams,,5.5,"$3,100",hou,A,cle,108,117, 4.37,5pt 1trey 2-2fg 0-1ft
+44,20181124,4611,PG/SG,Ian Clark,,3.75,"$3,100",nor,A,was,114,124, 9.00,2pt 1rb 1as 2to 1-3fg
+45,20181124,4908,SG,Troy Williams,,3.25,"$3,000",sac,A,gsw,116,117, 7.65,2pt 1rb 1-3fg
+46,20181124,5664,PG,Jalen Brunson,,2.0,"$3,300",dal,H,bos,113,104, 8.60,2pt 1-1fg 0-1ft
+47,20181124,4882,PG/SG,Cameron Payne,,1.5,"$3,100",chi,A,min,96,111, 6.62,0pt 1as 0-1fg
+48,20181124,5673,SG,Jacob Evans III,,0.0,"$3,000",gsw,H,sac,117,116, 0.53,0pt
+49,20181124,5674,SG,Josh Okogie,,0.0,"$3,400",min,H,chi,111,96, 1.00,0pt
+50,20181124,3747,PG/SG,Raymond Felton,,0.0,"$3,100",okc,H,den,98,105,DNP,
+51,20181124,5250,SG,Jaylen Morris,,0.0,"$3,000",mil,H,sas,135,129,DNP,
+52,20181124,5696,PG,DeVaughn Akoon-Purcell,,0.0,"$3,000",den,A,okc,105,98,DNP,
+53,20181124,4717,PG/SG,Tim Frazier,,0.0,"$3,000",nor,A,was,114,124,DNP,
+54,20181124,5686,SG,Chandler Hutchison,,0.0,"$3,100",chi,A,min,96,111,DNP,
+55,20181124,3786,PG,Chris Paul,,0.0,"$7,700",hou,A,cle,108,117,DNP,
+56,20181124,4102,PG/SG,George Hill,,0.0,"$3,800",cle,H,hou,117,108,DNP,
+57,20181124,4970,PG/SG,Yogi Ferrell,,0.0,"$3,000",sac,A,gsw,116,117,DNP,
+58,20181124,4678,SG,Gary Harris,,0.0,"$5,700",den,A,okc,105,98,DNP,
+59,20181124,5659,PG/SG,Brad Wanamaker,,0.0,"$3,000",bos,A,dal,104,113,DNP,
+60,20181124,4699,PG,Elfrid Payton,,0.0,"$5,500",nor,A,was,114,124,NA,
+61,20181124,5143,SG,Devin Robinson,,0.0,"$3,000",was,H,nor,124,114,NA,
+62,20181124,4173,PG/SG,Stephen Curry,,0.0,"$9,500",gsw,H,sac,117,116,NA,
+63,20181124,5668,PG,Daryl Macon,,0.0,"$3,000",dal,H,bos,113,104,NA,
+64,20181124,4963,PG,Dejounte Murray,,0.0,"$3,000",sas,A,mil,129,135,NA,
+65,20181124,5177,PG,PJ Dozier,,0.0,"$3,000",bos,A,dal,104,113,NA,
+66,20181124,4950,PG,Tyler Ulis,,0.0,"$3,000",chi,A,min,96,111,NA,
+67,20181124,5741,PG,Rawle Alkins,,0.0,"$3,000",chi,A,min,96,111,NA,
+68,20181124,5745,PG,Jared Terrell,,0.0,"$3,000",min,H,chi,111,96,NA,
+69,20181124,5247,PG,Walter Lemon Jr.,,0.0,"$3,000",bos,A,dal,104,113,NA,
+70,20181124,4945,PG/SG,Kris Dunn,,0.0,"$5,500",chi,A,min,96,111,NA,
+71,20181124,5756,SG,Lonnie Walker,,0.0,"$3,000",sas,A,mil,129,135,NA,
+72,20181124,5737,SG,Hamidou Diallo,,0.0,"$3,300",okc,H,den,98,105,NA,
+73,20181124,4832,PG/SG,Jordan McRae,,0.0,"$3,000",was,H,nor,124,114,NA,
+74,20181124,4420,PG,Isaiah Thomas,,0.0,"$4,300",den,A,okc,105,98,NA,
+75,20181124,5740,SG,Donte DiVincenzo,,0.0,"$3,000",mil,H,sas,135,129,NA,
+76,20181124,5124,SG,Jabari Bird,,0.0,"$3,000",bos,A,dal,104,113,NA,
+77,20181124,4183,SG,Jodie Meeks,,0.0,"$3,000",mil,H,sas,135,129,NA,
+78,20181124,5781,PG,Trevon Duval,,0.0,"$3,000",mil,H,sas,135,129,NA,
+79,20181124,4076,PG/SG,Jerryd Bayless,,0.0,"$3,000",min,H,chi,111,96,NA,
+80,20181124,5212,PG,Dennis Smith Jr.,,0.0,"$5,100",dal,H,bos,113,104,NA,
+81,20181124,5710,PG,Trevon Bluiett,,0.0,"$3,000",nor,A,was,114,124,NA,
+82,20181124,4382,PG/SG,Brandon Knight,,0.0,"$3,000",hou,A,cle,108,117,NA,
+83,20181124,4621,SF/PF,Giannis Antetokounmpo,1,74.5,"$11,200",mil,H,sas,135,129,38.82,34pt 18rb 8as 2st 1bl 3to 9-16fg 16-20ft
+84,20181124,3986,SF/PF,Kevin Durant,1,73.75,"$10,600",gsw,H,sac,117,116,40.08,44pt 13rb 7as 2bl 7to 2trey 13-26fg 16-17ft
+85,20181124,4283,SF/PF,Paul George,1,54.75,"$8,300",okc,H,den,98,105,39.93,24pt 11rb 3as 2st 3bl 1to 3trey 8-21fg 5-7ft
+86,20181124,4211,SG/SF,DeMar DeRozan,1,52.0,"$8,000",sas,A,mil,129,135,34.92,34pt 4rb 7as 1st 1trey 13-26fg 7-10ft
+87,20181124,4653,SF/PF,Otto Porter,1,48.75,"$5,500",was,H,nor,124,114,31.50,29pt 7rb 4as 2st 1to 3trey 12-15fg 2-3ft
+88,20181124,4728,SF/PF,Jabari Parker,1,47.75,"$5,900",chi,A,min,96,111,38.50,27pt 7rb 4as 2st 1bl 3to 3trey 11-18fg 2-4ft
+89,20181124,5714,PF,Marvin Bagley,,45.75,"$4,500",sac,A,gsw,116,117,33.78,20pt 17rb 2as 7-15fg 6-8ft
+90,20181124,4961,SG/SF,Buddy Hield,1,44.25,"$5,500",sac,A,gsw,116,117,33.17,28pt 7rb 3as 1bl 2to 4trey 12-21fg 0-1ft
+91,20181124,4558,SG/SF,Justin Holiday,1,42.75,"$4,600",chi,A,min,96,111,40.42,14pt 11rb 5as 1st 1bl 4trey 5-18fg
+92,20181124,4682,SF/PF,Nikola Mirotic,1,40.75,"$6,800",nor,A,was,114,124,40.20,24pt 9rb 1as 1st 1to 5trey 7-12fg 5-5ft
+93,20181124,4904,PF,Dario Saric,,39.0,"$4,600",min,H,chi,111,96,24.60,19pt 14rb 1st 3to 1trey 8-15fg 2-2ft
+94,20181124,4364,SG/SF,E'Twaun Moore,1,38.75,"$5,300",nor,A,was,114,124,34.63,19pt 5rb 2as 6st 4to 1trey 8-14fg 2-2ft
+95,20181124,4077,SG/SF,Eric Gordon,1,38.5,"$4,500",hou,A,cle,108,117,38.72,28pt 2rb 3st 1to 5trey 8-16fg 7-9ft
+96,20181124,5111,SF/PF,Jayson Tatum,1,37.0,"$6,200",bos,A,dal,104,113,36.40,21pt 4rb 3as 2st 1bl 2to 3trey 9-14fg
+97,20181124,4502,SF/PF,Harrison Barnes,1,34.25,"$5,600",dal,H,bos,113,104,30.43,20pt 3rb 3as 1st 1bl 1to 5trey 7-12fg 1-1ft
+98,20181124,4453,SF/PF,Markieff Morris,,33.25,"$4,500",was,H,nor,124,114,27.68,15pt 9rb 2st 1bl 2trey 6-12fg 1-2ft
+99,20181124,4990,SF/PF,Juan Hernangomez,1,32.0,"$4,700",den,A,okc,105,98,35.27,15pt 8rb 2st 1bl 1to 3trey 4-12fg 4-4ft
+100,20181124,4490,SG/SF,Khris Middleton,1,31.5,"$7,100",mil,H,sas,135,129,34.83,21pt 4rb 2as 1st 3to 4trey 8-14fg 1-2ft
+101,20181124,4828,SG/SF,Kelly Oubre,1,29.0,"$4,400",was,H,nor,124,114,22.83,12pt 4rb 1as 3st 2bl 1to 2trey 5-11fg
+102,20181124,5204,SG/SF,Torrey Craig,1,27.0,"$3,000",den,A,okc,105,98,36.07,8pt 10rb 1as 1st 2bl 2to 4-8fg 0-1ft
+103,20181124,5017,SG/SF,Jaylen Brown,1,25.25,"$4,200",bos,A,dal,104,113,30.40,16pt 5rb 1st 1bl 2to 7-9fg 2-2ft
+104,20181124,3857,SF/PF,Rudy Gay,1,25.0,"$5,900",sas,A,mil,129,135,30.60,10pt 4rb 4as 2st 1bl 4to 5-9fg 0-1ft
+105,20181124,4407,SF/PF,Marcus Morris,1,24.75,"$5,300",bos,A,dal,104,113,29.63,13pt 5rb 2as 1st 1trey 6-10fg
+106,20181124,4570,SF/PF,Robert Covington,1,24.5,"$5,700",min,H,chi,111,96,35.35,4pt 6rb 1as 3st 3bl 1to 1-18fg 2-2ft
+107,20181124,5135,SF,Justin Jackson,,24.0,"$3,200",sac,A,gsw,116,117,20.05,12pt 4rb 3as 1st 1trey 4-8fg 3-3ft
+108,20181124,4226,SF/PF,Dante Cunningham,1,23.5,"$3,700",sas,A,mil,129,135,30.70,5pt 10rb 1as 2st 1trey 2-4fg
+109,20181124,4932,SF,Dorian Finney-Smith,1,23.0,"$3,800",dal,H,bos,113,104,29.88,9pt 8rb 1as 2st 3to 4-11fg 1-3ft
+110,20181124,4806,SF/PF,Trey Lyles,,23.0,"$3,700",den,A,okc,105,98,19.58,16pt 4rb 1as 1to 2trey 6-6fg 2-2ft
+111,20181124,4397,SG/SF,Iman Shumpert,1,22.5,"$3,600",sac,A,gsw,116,117,27.33,14pt 4rb 1st 1to 4trey 4-7fg 2-2ft
+112,20181124,5109,SG/SF,David Nwaba,1,22.5,"$3,700",cle,H,hou,117,108,38.45,12pt 4rb 2st 1bl 1to 5-16fg 2-4ft
+113,20181124,4765,SF/PF,Jerami Grant,1,21.5,"$4,400",okc,H,den,98,105,31.35,13pt 2rb 2as 1bl 2trey 5-11fg 1-2ft
+114,20181124,4164,SG/SF,Wes Matthews,1,21.5,"$4,900",dal,H,bos,113,104,32.93,15pt 2rb 1as 1bl 2to 3trey 4-12fg 4-4ft
+115,20181124,3641,SG/SF,Andre Iguodala,1,21.25,"$3,500",gsw,H,sac,117,116,31.97,1pt 7rb 4as 2st 1bl 1to 0-2fg 1-2ft
+116,20181124,3547,SG/SF,Kyle Korver,,20.75,"$3,100",cle,H,hou,117,108,18.97,12pt 5rb 1st 2to 3trey 3-5fg 3-3ft
+117,20181124,3974,SG/SF,Marco Belinelli,,20.0,"$3,600",sas,A,mil,129,135,17.13,12pt 2rb 3as 2trey 4-9fg 2-2ft
+118,20181124,5162,PF,Maxi Kleber,,18.75,"$3,100",dal,H,bos,113,104,22.65,7pt 7rb 1as 1st 2to 1trey 3-8fg
+119,20181124,5116,SF,Cedi Osman,1,18.75,"$4,800",cle,H,hou,117,108,23.42,7pt 3rb 3as 2st 1to 1-6fg 5-5ft
+120,20181124,5167,PF,Harry Giles,,18.5,"$3,000",sac,A,gsw,116,117,10.97,10pt 2rb 4as 4-5fg 2-3ft
+121,20181124,5138,SG/SF,Bogdan Bogdanovic,,18.5,"$4,000",sac,A,gsw,116,117,27.60,10pt 2rb 2as 1st 2trey 3-9fg 2-2ft
+122,20181124,4187,SF/PF,Jonas Jerebko,,17.75,"$4,100",gsw,H,sac,117,116,21.35,4pt 9rb 2as 1to 2-5fg
+123,20181124,3871,SF/PF,P.J. Tucker,1,16.5,"$4,100",hou,A,cle,108,117,41.82,7pt 8rb 2to 1trey 3-7fg
+124,20181124,4484,SF/PF,Darius Miller,,15.0,"$3,100",nor,A,was,114,124,30.68,10pt 2rb 1st 1to 2trey 4-8fg
+125,20181124,3992,SF/PF,Jeff Green,,14.5,"$4,300",was,H,nor,124,114,20.52,4pt 4rb 4as 1to 2-5fg
+126,20181124,4957,PF,Cheick Diallo,,14.0,"$3,100",nor,A,was,114,124,17.18,6pt 2rb 1as 2bl 3-6fg
+127,20181124,5125,PF,Jordan Bell,,13.5,"$3,200",gsw,H,sac,117,116,13.38,2pt 2rb 2as 2st 1bl 1-1fg
+128,20181124,4167,PF,Taj Gibson,1,12.5,"$4,200",min,H,chi,111,96,23.40,6pt 2rb 2as 1st 2to 2-5fg 2-2ft
+129,20181124,4875,SF/PF,Nemanja Bjelica,1,12.5,"$4,200",sac,A,gsw,116,117,18.97,1pt 4rb 2as 1st 1bl 1to 0-3fg 1-2ft
+130,20181124,4744,SG/SF,Rodney Hood,1,11.0,"$4,300",cle,H,hou,117,108,25.72,9pt 1as 1to 2trey 3-7fg 1-1ft
+131,20181124,3760,SG/SF,Gerald Green,,10.25,"$3,400",hou,A,cle,108,117,16.82,6pt 3rb 1trey 2-5fg 1-2ft
+132,20181124,5724,SF,Gary Clark,,9.5,"$3,500",hou,A,cle,108,117,21.78,5pt 2rb 1as 1trey 2-4fg
+133,20181124,4697,SG/SF,James Ennis,1,9.25,"$3,900",hou,A,cle,108,117,30.07,5pt 1rb 1as 1st 2to 1trey 2-6fg
+134,20181124,4811,SG/SF,Pat Connaughton,,9.25,"$3,500",mil,H,sas,135,129,16.12,4pt 3rb 1bl 1to 2-6fg
+135,20181124,4292,SF/PF,Wesley Johnson,1,8.25,"$3,300",nor,A,was,114,124,12.93,3pt 3rb 1as 1to 1trey 1-4fg
+136,20181124,5115,PF,Semi Ojeleye,,5.25,"$3,000",bos,A,dal,104,113,18.55,0pt 3rb 1as
+137,20181124,4571,SG/SF,Tony Snell,,3.5,"$3,100",mil,H,sas,135,129, 8.60,3pt 1trey 1-2fg
+138,20181124,4943,SG/SF,Alex Abrines,,2.75,"$3,000",okc,H,den,98,105, 7.80,0pt 1rb 1as 0-2fg
+139,20181124,4704,SG/SF,Andrew Wiggins,1,2.25,"$6,400",min,H,chi,111,96,28.52,0pt 1rb 1as 1to 0-12fg
+140,20181124,4305,SF,Quincy Pondexter,,0.0,"$3,000",sas,A,mil,129,135, 0.12,0pt
+141,20181124,5746,PF,Isaiah Hartenstein,,0.0,"$3,300",hou,A,cle,108,117, 2.85,0pt
+142,20181124,5666,SG/SF,Ryan Broekhoff,,0.0,"$3,000",dal,H,bos,113,104,DNP,
+143,20181124,4589,SG/SF,Ben McLemore,,0.0,"$3,000",sac,A,gsw,116,117,DNP,
+144,20181124,4049,SF/PF,Anthony Tolliver,,0.0,"$3,000",min,H,chi,111,96,DNP,
+145,20181124,4580,SG/SF,James Nunnally,,0.0,"$3,000",min,H,chi,111,96,DNP,
+146,20181124,4566,SF/PF,Solomon Hill,,0.0,"$3,000",nor,A,was,114,124,DNP,
+147,20181124,5680,PF,Chimezie Metu,,0.0,"$3,000",sas,A,mil,129,135,DNP,
+148,20181124,5699,SF,Troy Brown Jr.,,0.0,"$3,000",was,H,nor,124,114,DNP,
+149,20181124,5118,PF,Guerschon Yabusele,,0.0,"$3,000",bos,A,dal,104,113,DNP,
+150,20181124,3629,SF/PF,Luol Deng,,0.0,"$3,000",min,H,chi,111,96,DNP,
+151,20181124,5175,PF,Tyler Lydon,,0.0,"$3,000",den,A,okc,105,98,DNP,
+152,20181124,5127,PF,Abdel Nader,,0.0,"$3,000",okc,H,den,98,105,DNP,
+153,20181124,5669,SF,Kostas Antetokounmpo,,0.0,"$3,000",dal,H,bos,113,104,NA,
+154,20181124,5688,SF,Kenrich Williams,,0.0,"$3,000",nor,A,was,114,124,NA,
+155,20181124,5675,SF,Keita Bates-Diop,,0.0,"$3,000",min,H,chi,111,96,NA,
+156,20181124,3510,SF/PF,Carmelo Anthony,,0.0,"$3,500",hou,A,cle,108,117,NA,
+157,20181124,5778,SF/PF,Jarred Vanderbilt,,0.0,"$3,000",den,A,okc,105,98,NA,
+158,20181124,5667,PF,Ray Spalding,,0.0,"$3,000",dal,H,bos,113,104,NA,
+159,20181124,5722,PF,Billy Preston,,0.0,"$3,000",cle,H,hou,117,108,NA,
+160,20181124,4559,SG/SF,Andre Roberson,,0.0,"$3,000",okc,H,den,98,105,NA,
+161,20181124,5715,SF,Wenyen Gabriel,,0.0,"$3,000",sac,A,gsw,116,117,NA,
+162,20181124,5146,PF,D.J. Wilson,,0.0,"$3,000",mil,H,sas,135,129,NA,
+163,20181124,4522,SG/SF,Will Barton,,0.0,"$5,500",den,A,okc,105,98,NA,
+164,20181124,5672,SF,Marcus Derrickson,,0.0,"$3,000",gsw,H,sac,117,116,NA,
+165,20181124,5227,PF,Lauri Markkanen,,0.0,"$5,000",chi,A,min,96,111,NA,
+166,20181124,4856,SF/PF,Sam Dekker,,0.0,"$3,800",cle,H,hou,117,108,NA,
+167,20181124,4901,SG/SF,Denzel Valentine,,0.0,"$3,000",chi,A,min,96,111,NA,
+168,20181124,5698,SF/PF,Michael Porter,,0.0,"$3,000",den,A,okc,105,98,NA,
+169,20181124,3669,SG/SF,J.R. Smith,,0.0,"$3,400",cle,H,hou,117,108,NA,
+170,20181124,4285,SG/SF,Gordon Hayward,,0.0,"$5,500",bos,A,dal,104,113,NA,
+171,20181124,5723,SF,Vincent Edwards,,0.0,"$3,000",hou,A,cle,108,117,NA,
+172,20181124,4974,SG/SF,C.J. Williams,,0.0,"$3,000",min,H,chi,111,96,NA,
+173,20181124,5225,SF,Terrance Ferguson,,0.0,"$3,000",okc,H,den,98,105,NA,
+174,20181124,5230,PF,Alfonzo McKinnie,,0.0,"$3,200",gsw,H,sac,117,116,NA,
+175,20181124,4879,C,Karl-Anthony Towns,1,74.0,"$9,100",min,H,chi,111,96,37.33,35pt 22rb 6as 1st 3to 1trey 13-23fg 8-10ft
+176,20181124,4680,PF/C,Julius Randle,1,61.25,"$7,300",nor,A,was,114,124,38.62,29pt 15rb 7as 1st 2to 1trey 10-16fg 8-10ft
+177,20181124,4380,C,Tristan Thompson,1,53.0,"$5,500",cle,H,hou,117,108,39.15,16pt 20rb 2as 4st 1to 6-12fg 4-8ft
+178,20181124,4766,C,Clint Capela,1,37.5,"$7,500",hou,A,cle,108,117,39.95,12pt 10rb 3as 4bl 2to 4-4fg 4-4ft
+179,20181124,4107,C,DeAndre Jordan,1,37.25,"$7,100",dal,H,bos,113,104,33.43,14pt 13rb 3as 1st 2to 5-7fg 4-7ft
+180,20181124,4574,C,Steven Adams,1,32.0,"$6,600",okc,H,den,98,105,37.32,12pt 14rb 1st 2to 6-15fg 0-1ft
+181,20181124,4772,C,Nikola Jokic,1,31.0,"$8,800",den,A,okc,105,98,27.18,16pt 6rb 5as 1bl 4to 6-20fg 4-5ft
+182,20181124,4989,PF/C,Davis Bertans,,30.0,"$3,200",sas,A,mil,129,135,23.22,17pt 6rb 1as 1st 4trey 6-11fg 1-1ft
+183,20181124,4607,PF/C,Mason Plumlee,,29.75,"$3,300",den,A,okc,105,98,20.82,11pt 7rb 2as 4bl 2to 4-8fg 3-6ft
+184,20181124,3904,PF/C,Paul Millsap,1,24.5,"$6,100",den,A,okc,105,98,28.42,8pt 6rb 3as 1st 1bl 1to 2trey 3-7fg 0-2ft
+185,20181124,5685,C,Wendell Carter Jr.,1,24.0,"$5,400",chi,A,min,96,111,31.65,12pt 8rb 1as 1st 3to 3-8fg 6-7ft
+186,20181124,3860,PF/C,LaMarcus Aldridge,1,23.75,"$7,600",sas,A,mil,129,135,30.58,15pt 3rb 3as 1st 3to 6-12fg 3-4ft
+187,20181124,4798,PF/C,Larry Nance,,23.5,"$5,400",cle,H,hou,117,108,18.40,8pt 8rb 1as 1st 1bl 1to 1trey 2-3fg 3-4ft
+188,20181124,4933,C,Damian Jones,1,21.5,"$3,300",gsw,H,sac,117,116,21.30,13pt 6rb 1as 1to 5-6fg 3-4ft
+189,20181124,3998,PF/C,Al Horford,1,21.5,"$5,800",bos,A,dal,104,113,31.37,8pt 8rb 1as 1st 2to 2trey 3-11fg
+190,20181124,4820,PF/C,Kevon Looney,,18.0,"$3,700",gsw,H,sac,117,116,13.32,7pt 4rb 3as 1st 1to 3-3fg 1-2ft
+191,20181124,5004,C,Jakob Poeltl,,17.75,"$3,100",sas,A,mil,129,135,14.05,7pt 5rb 2as 1bl 1to 2-4fg 3-3ft
+192,20181124,4817,C,Willie Cauley-Stein,1,16.5,"$5,800",sac,A,gsw,116,117,19.88,6pt 4rb 1as 1st 1bl 3-9fg 0-2ft
+193,20181124,4556,C,Aron Baynes,,15.75,"$3,300",bos,A,dal,104,113,16.63,4pt 9rb 1as 2to 1-4fg 2-2ft
+194,20181124,4112,C,Robin Lopez,,15.0,"$3,000",chi,A,min,96,111,16.35,7pt 2rb 1st 2bl 2to 1trey 2-3fg 2-2ft
+195,20181124,4075,C,Brook Lopez,1,14.5,"$5,100",mil,H,sas,135,129,29.23,9pt 2rb 1as 1bl 2to 1trey 3-4fg 2-3ft
+196,20181124,4935,PF/C,Thon Maker,,14.0,"$3,000",mil,H,sas,135,129,16.82,5pt 4rb 1as 1st 1trey 2-6fg
+197,20181124,4652,C,Nerlens Noel,,13.75,"$3,400",okc,H,den,98,105,10.68,4pt 5rb 1as 1st 2-2fg
+198,20181124,5217,C,Thomas Bryant,1,12.25,"$3,400",was,H,nor,124,114,16.48,4pt 3rb 2as 1bl 1to 2-2fg
+199,20181124,4858,C,Salah Mejri,,7.25,"$3,000",dal,H,bos,113,104, 7.80,2pt 3rb 1as 1-1fg
+200,20181124,4632,PF/C,Gorgui Dieng,,6.75,"$3,200",min,H,chi,111,96,10.67,2pt 1rb 1as 1bl 1-5fg
+201,20181124,4302,PF/C,Patrick Patterson,,4.5,"$3,000",okc,H,den,98,105, 9.00,0pt 2rb 1st 0-3fg
+202,20181124,4845,C,Cristiano Felicio,,0.0,"$3,000",chi,A,min,96,111, 1.00,0pt
+203,20181124,4482,PF/C,Anthony Davis,,0.0,"$11,400",nor,A,was,114,124,DNP,
+204,20181124,3765,PF/C,Ersan Ilyasova,,0.0,"$3,400",mil,H,sas,135,129,DNP,
+205,20181124,4836,C,Jahlil Okafor,,0.0,"$3,000",nor,A,was,114,124,DNP,
+206,20181124,3777,C,Ian Mahinmi,,0.0,"$3,100",was,H,nor,124,114,DNP,
+207,20181124,5119,C,Ante Zizic,,0.0,"$3,200",cle,H,hou,117,108,DNP,
+208,20181124,4952,PF/C,Marquese Chriss,,0.0,"$3,000",hou,A,cle,108,117,DNP,
+209,20181124,3639,C,Dwight Howard,,0.0,"$6,100",was,H,nor,124,114,DNP,
+210,20181124,4023,PF/C,Jason Smith,,0.0,"$3,100",was,H,nor,124,114,DNP,
+211,20181124,3749,PF/C,Channing Frye,,0.0,"$3,000",cle,H,hou,117,108,DNP,
+212,20181124,5114,PF/C,Daniel Theis,,0.0,"$3,000",bos,A,dal,104,113,DNP,
+213,20181124,4834,C,Christian Wood,,0.0,"$3,000",mil,H,sas,135,129,DNP,
+214,20181124,5660,C,Robert Williams,,0.0,"$3,000",bos,A,dal,104,113,DNP,
+215,20181124,5679,C,Drew Eubanks,,0.0,"$3,100",sas,A,mil,129,135,NA,
+216,20181124,5750,C,Tyler Davis,,0.0,"$3,000",okc,H,den,98,105,NA,
+217,20181124,4674,PF/C,Dwight Powell,,0.0,"$3,400",dal,H,bos,113,104,NA,
+218,20181124,4841,PF/C,Bobby Portis,,0.0,"$5,000",chi,A,min,96,111,NA,
+219,20181124,4109,C,Kosta Koufos,,0.0,"$3,000",sac,A,gsw,116,117,NA,
+220,20181124,3314,PF/C,Zach Randolph,,0.0,"$3,000",sac,A,gsw,116,117,NA,
+221,20181124,4504,PF/C,Draymond Green,,0.0,"$7,000",gsw,H,sac,117,116,NA,
+222,20181124,5697,C,Thomas Welsh,,0.0,"$3,000",den,A,okc,105,98,NA,
+223,20181124,5121,C,Zhou Qi,,0.0,"$3,000",hou,A,cle,108,117,NA,
+224,20181124,4525,C,John Henson,,0.0,"$3,100",mil,H,sas,135,129,NA,
+225,20181124,4274,PF/C,DeMarcus Cousins,,0.0,"$6,000",gsw,H,sac,117,116,NA,
+226,20181124,2374,PF/C,Dirk Nowitzki,,0.0,"$4,300",dal,H,bos,113,104,NA,
+227,20181124,4979,PF/C,Skal Labissiere,,0.0,"$3,000",sac,A,gsw,116,117,NA,
+228,20181124,3308,C,Pau Gasol,,0.0,"$3,600",sas,A,mil,129,135,NA,
+229,20181124,4074,PF/C,Kevin Love,,0.0,"$8,000",cle,H,hou,117,108,NA,
+230,20181124,3408,C,Nene Hilario,,0.0,"$3,200",hou,A,cle,108,117,NA,
