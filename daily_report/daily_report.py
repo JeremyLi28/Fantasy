@@ -23,7 +23,6 @@ def fetch_dk_result(year, month, day):
 	r = urllib.urlopen('http://rotoguru1.com/cgi-bin/hyday.pl?mon=%s&day=%s&year=%s&game=dk&scsv=1' % (month, day, year)).read()
 	soup = BeautifulSoup(r, features="html.parser")
 	raw = soup.find('pre').find('pre').text.split('\n')
-	print "records num: " + str(len(raw) - 1) 
 	dk_res = []
 	for line in raw:
 		fields = line.split(';')
@@ -59,6 +58,7 @@ def fetch_roto_ql_projection(year, month, day):
 	proj_df = proj_df.set_index('Name')
 	proj_df.to_csv('./data/projections/rotoql/%s-%s-%s.csv' % (year, month, day))
 	return proj_df
+	
 def fetch_line_ups(year, month, day):
 	path = './data/lineups/%s-%s-%s.csv' % (year, month, day)
 	lineups = pd.read_csv(path, header=0)
