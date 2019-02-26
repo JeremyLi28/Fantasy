@@ -11,7 +11,7 @@ def fetch_roto_grinders_proj(year, month, day):
 	soup = BeautifulSoup(r, features="html.parser")
 	# Have 2 scripts tag, we use the 2nd for now, the usage of first need to be further investigated, related to vegas money line
 	script_tags = soup.find('section', {'class' : 'pag bdy'}).findAll('script')
-	raw_data = script_tags[1].text.split('\n')[2].strip().split('=')[1].strip()[:-1]
+	raw_data = script_tags[2].text.split('\n')[2].strip().split('=')[1].strip()[:-1]
 	json_data = json.loads(raw_data)
 	with open(home + 'data/raw/rotogrinders/projections/%s-%s-%s.json' % (year, month, day), 'w') as json_file:
 		json.dump(json_data, json_file)
