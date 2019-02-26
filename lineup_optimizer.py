@@ -21,7 +21,7 @@ def create_lineups(source, year, month, day, top_k):
 	players_by_pos = [sgs, pgs, gs, sfs, pfs, fs, cs, utils]
 
 	lineups = optimize(50000, players_by_pos, data, top_k)
-	lineups_df = pd.DataFrame([['rg_proj_%s' % (i + 1)] + lineup[0] for i, lineup in enumerate(lineups)], \
+	lineups_df = pd.DataFrame([['rg_proj_%s' % (i + 1)] + lineup for i, lineup in enumerate(lineups)], \
 		columns=['Name', 'SG', 'PG', 'G', 'SF', 'PF', 'F', 'C', 'UTIL', 'Points', 'Salary'])
 	lineups_df.to_csv(home + 'data/lineups/%s-%s-%s.csv' % (year, month, day))
 
@@ -98,7 +98,7 @@ def optimize(salary_cap, players_by_pos, data, top_k):
         salary = lineup_salary(l, data)
         l.append(points)
         l.append(salary * 100)
-        result.append(l)
+        result.insert(0, l)
     return result
 
 if __name__ == "__main__":
