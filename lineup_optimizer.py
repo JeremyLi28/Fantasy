@@ -105,4 +105,5 @@ if __name__ == "__main__":
 	year = sys.argv[1]
 	month = sys.argv[2]
 	day = sys.argv[3]
-	create_lineups('rotogrinders_proj', year, month, day, 10)
+	top_k = int(sys.argv[4])
+	create_lineups('rotogrinders_proj', year, month, day, top_k)
