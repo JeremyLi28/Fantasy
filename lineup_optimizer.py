@@ -70,7 +70,7 @@ class LineupPriorityQueue:
     def items(self):
         items = []
         for lineup in self.lineups:
-            items.append(lineup[1])
+            items.append(lineup)
         return items
     
     def empty(self):
@@ -86,10 +86,10 @@ def optimize(salary_cap, players_by_pos, data, top_k):
             for l in memory[i - 1][j].items():
                 for player in players_by_pos[i - 1]:
                     salary = int(data.loc[player]['salary'] / 100)
-                    if j + salary <= salary_cap / 100 and player not in set(l) and len(l) == i - 1:
-                        lineup =  l[:]
+                    if j + salary <= salary_cap / 100 and player not in set(l[1]) and len(l[1]) == i - 1:
+                        lineup =  l[1][:]
                         lineup.append(player)
-                        memory[i][j + salary].push(lineup, lineup_points(lineup, data))
+                        memory[i][j + salary].push(lineup, l[0] + data.loc[player]['points'])
 
     result = []
     while not memory[len(players_by_pos)][salary_cap / 100].empty():
