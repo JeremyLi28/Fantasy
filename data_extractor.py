@@ -10,6 +10,9 @@ def Extract(year, month, day):
 	player_dict = {'name' : [], 'position' : [], 'salary' : [], 'points' : []}
 	player_slate_id_dict = {'player_name' : [], 'slate_id' : [], 'player_id': []}
 	for data in player_json_data:
+		if data['import_data'] is None:
+			print 'None import_data for ' + data['player_name']
+			continue
 		player_dict['name'].append(data['player_name'])
 		player_dict['position'].append(data['position'])
 		player_dict['salary'].append(data['salary'])

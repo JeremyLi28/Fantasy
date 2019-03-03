@@ -2,28 +2,46 @@ import pandas as pd
 import sys
 from operator import itemgetter
 import heapq
+import os
 
 home = './'
 
-def create_lineups(source, year, month, day, top_k):
-	path = home + 'data/extractor/%s/%s-%s-%s.csv' % (source, year, month, day)
-	data = pd.read_csv(path, header = 0, index_col = 0)
 
-	sgs = data[data['position'].str.contains('SG')].index.tolist()
-	pgs = data[data['position'].str.contains('PG')].index.tolist()
-	gs = data[data['position'].str.contains('SG') | data['position'].str.contains('PG')].index.tolist()
-	sfs = data[data['position'].str.contains('SF')].index.tolist()
-	pfs = data[data['position'].str.contains('PF')].index.tolist()
-	fs = data[data['position'].str.contains('SF') | data['position'].str.contains('F')].index.tolist()
-	cs = data[data['position'].str.contains('C')].index.tolist()
-	utils = data.index.tolist()
+def create_lineups(source, year, month, day, top_k, slate_name = "All Games"):
+	projections_path = home + 'data/extractor/%s/projections/%s-%s-%s.csv' % (source, year, month, day)
+	projections_data = pd.read_csv(projections_path, header = 0, index_col = 0)
+	slates_path = home + 'data/extractor/rotogrinders/slates/%s-%s-%s.csv' % (year, month, day)
+	slates_data = pd.read_csv(slates_path, header = 0, index_col = 0)
+	player_slate_id_path = home + 'data/extractor/rotogrinders/player_slate_id/%s-%s-%s.csv' % (year, month, day)
+	player_slate_id_data = pd.read_csv(player_slate_id_path, header = 0, index_col = 0)
+
+	if slate_name not in slates_data.index.tolist():
+		print slate_name + " Not exist!"
+		return
+	slate_id = slates_data.loc[slate_name]['id']
+
+	is_in_slate = projections_data.index.isin(player_slate_id_data[player_slate_id_data['slate_id'] == slate_id].index)
+
+	sgs = projections_data[projections_data['position'].str.contains('SG') & is_in_slate].index.tolist()
+	pgs = projections_data[projections_data['position'].str.contains('PG') & is_in_slate].index.tolist()
+	gs = projections_data[(projections_data['position'].str.contains('SG') | projections_data['position'].str.contains('PG')) & is_in_slate].index.tolist()
+	sfs = projections_data[projections_data['position'].str.contains('SF') & is_in_slate].index.tolist()
+	pfs = projections_data[projections_data['position'].str.contains('PF') & is_in_slate].index.tolist()
+	fs = projections_data[(projections_data['position'].str.contains('SF') | projections_data['position'].str.contains('F')) & is_in_slate].index.tolist()
+	cs = projections_data[projections_data['position'].str.contains('C') & is_in_slate].index.tolist()
+	utils = projections_data[is_in_slate].index.tolist()
 
 	players_by_pos = [sgs, pgs, gs, sfs, pfs, fs, cs, utils]
 
-	lineups = optimize(50000, players_by_pos, data, top_k)
+	lineups = optimize(50000, players_by_pos, projections_data, top_k)
 	lineups_df = pd.DataFrame([['rg_proj_%s' % (i + 1)] + lineup for i, lineup in enumerate(lineups)], \
 		columns=['Name', 'SG', 'PG', 'G', 'SF', 'PF', 'F', 'C', 'UTIL', 'Points', 'Salary'])
-	lineups_df.to_csv(home + 'data/lineups/%s-%s-%s.csv' % (year, month, day))
+	projections_dir = 'data/lineups/%s-%s-%s' % (year, month, day)
+	if not os.path.exists(projections_dir):
+		os.makedirs(projections_dir)
+	lineups_df.to_csv(home + projections_dir + '/%s.csv' % (slate_name))
+
+	gen_dk_result(lineups_df, player_slate_id_data[player_slate_id_data['slate_id'] == slate_id], slate_name)
 
 def lineup_salary(lineup, data):
 	salary = 0
@@ -101,9 +119,25 @@ def optimize(salary_cap, players_by_pos, data, top_k):
         result.insert(0, l)
     return result
 
+def gen_dk_result(lineups_df, player_slate_id, slate_name):
+    result = lineups_df[['PG', 'SG', 'SF', 'PF', 'C', 'G', 'F', 'UTIL']]
+    result['PG'] = result['PG'].apply(lambda x : player_slate_id.loc[x, 'player_id'])
+    result['SG'] = result['SG'].apply(lambda x : player_slate_id.loc[x, 'player_id'])
+    result['SF'] = result['SF'].apply(lambda x : player_slate_id.loc[x, 'player_id'])
+    result['PF'] = result['PF'].apply(lambda x : player_slate_id.loc[x, 'player_id'])
+    result['C'] = result['C'].apply(lambda x : player_slate_id.loc[x, 'player_id'])
+    result['G'] = result['G'].apply(lambda x : player_slate_id.loc[x, 'player_id'])
+    result['F'] = result['F'].apply(lambda x : player_slate_id.loc[x, 'player_id'])
+    result['UTIL'] = result['UTIL'].apply(lambda x : player_slate_id.loc[x, 'player_id'])
+    result_dir = 'data/submissions/dk/%s-%s-%s' % (year, month, day)
+    if not os.path.exists(result_dir):
+		os.makedirs(result_dir)
+    result.to_csv(home + result_dir + '/%s.csv' % (slate_name), index=False)
+
 if __name__ == "__main__":
 	year = sys.argv[1]
 	month = sys.argv[2]
 	day = sys.argv[3]
 	top_k = int(sys.argv[4])
-	create_lineups('rotogrinders_proj', year, month, day, top_k)
+	slate_name = sys.argv[5]
+	create_lineups('rotogrinders', year, month, day, top_k, slate_name)
