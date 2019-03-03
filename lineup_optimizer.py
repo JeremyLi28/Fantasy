@@ -6,6 +6,28 @@ import os
 
 home = './'
 
+def get_player_by_pos(projections_data, slates_data, slate_type, slate_id):
+	if slate_type == 'classic':
+		sgs = projections_data[projections_data['position'].str.contains('SG') & (projections_data['slate_id'] == slate_id)].index.tolist()
+		pgs = projections_data[projections_data['position'].str.contains('PG') & (projections_data['slate_id'] == slate_id)].index.tolist()
+		gs = projections_data[(projections_data['position'].str.contains('SG') | projections_data['position'].str.contains('PG')) & (projections_data['slate_id'] == slate_id)].index.tolist()
+		sfs = projections_data[projections_data['position'].str.contains('SF') & (projections_data['slate_id'] == slate_id)].index.tolist()
+		pfs = projections_data[projections_data['position'].str.contains('PF') & (projections_data['slate_id'] == slate_id)].index.tolist()
+		fs = projections_data[(projections_data['position'].str.contains('SF') | projections_data['position'].str.contains('F')) & (projections_data['slate_id'] == slate_id)].index.tolist()
+		cs = projections_data[projections_data['position'].str.contains('C') & (projections_data['slate_id'] == slate_id)].index.tolist()
+		utils = projections_data[projections_data['slate_id'] == slate_id].index.tolist()
+		return [sgs, pgs, gs, sfs, pfs, fs, cs, utils]
+	elif slate_type == 'tiers':
+		t1 = projections_data[projections_data['position'].str.contains('T1') & (projections_data['slate_id'] == slate_id)].index.tolist()
+		t2 = projections_data[projections_data['position'].str.contains('T2') & (projections_data['slate_id'] == slate_id)].index.tolist()
+		t3 = projections_data[projections_data['position'].str.contains('T3') & (projections_data['slate_id'] == slate_id)].index.tolist()
+		t4 = projections_data[projections_data['position'].str.contains('T4') & (projections_data['slate_id'] == slate_id)].index.tolist()
+		t5 = projections_data[projections_data['position'].str.contains('T5') & (projections_data['slate_id'] == slate_id)].index.tolist()
+		t6 = projections_data[projections_data['position'].str.contains('T6') & (projections_data['slate_id'] == slate_id)].index.tolist()
+		return [t1, t2, t3, t4, t5, t6]
+	else:
+		print slate_type + " not supported yet!"
+		return []
 
 def create_lineups(source, year, month, day, top_k, slate_name = "All Games"):
 	projections_path = home + 'data/extractor/%s/projections/%s-%s-%s.csv' % (source, year, month, day)
@@ -17,27 +39,13 @@ def create_lineups(source, year, month, day, top_k, slate_name = "All Games"):
 		print slate_name + " Not exist!"
 		return
 	slate_id = slates_data.loc[slate_name]['id']
+	slate_type = slate_name.split(':')[2].strip().split(' ')[0].lower()
 
-	sgs = projections_data[projections_data['position'].str.contains('SG') & (projections_data['slate_id'] == slate_id)].index.tolist()
-	pgs = projections_data[projections_data['position'].str.contains('PG') & (projections_data['slate_id'] == slate_id)].index.tolist()
-	gs = projections_data[(projections_data['position'].str.contains('SG') | projections_data['position'].str.contains('PG')) & (projections_data['slate_id'] == slate_id)].index.tolist()
-	sfs = projections_data[projections_data['position'].str.contains('SF') & (projections_data['slate_id'] == slate_id)].index.tolist()
-	pfs = projections_data[projections_data['position'].str.contains('PF') & (projections_data['slate_id'] == slate_id)].index.tolist()
-	fs = projections_data[(projections_data['position'].str.contains('SF') | projections_data['position'].str.contains('F')) & (projections_data['slate_id'] == slate_id)].index.tolist()
-	cs = projections_data[projections_data['position'].str.contains('C') & (projections_data['slate_id'] == slate_id)].index.tolist()
-	utils = projections_data[projections_data['slate_id'] == slate_id].index.tolist()
-
-	players_by_pos = [sgs, pgs, gs, sfs, pfs, fs, cs, utils]
+	players_by_pos = get_player_by_pos(projections_data, slates_data, slate_type, slate_id)
 
 	lineups = optimize(50000, players_by_pos, projections_data[projections_data['slate_id'] == slate_id], top_k)
-	lineups_df = pd.DataFrame([['rg_proj_%s' % (i + 1)] + lineup for i, lineup in enumerate(lineups)], \
-		columns=['Name', 'SG', 'PG', 'G', 'SF', 'PF', 'F', 'C', 'UTIL', 'Points', 'Salary'])
-	projections_dir = 'data/lineups/%s-%s-%s' % (year, month, day)
-	if not os.path.exists(projections_dir):
-		os.makedirs(projections_dir)
-	lineups_df.to_csv(home + projections_dir + '/%s.csv' % (slate_name))
 
-	gen_dk_result(lineups_df, projections_data[projections_data['slate_id'] == slate_id], slate_name)
+	store_lineups(lineups, projections_data[projections_data['slate_id'] == slate_id], slate_name, slate_type, slate_id)
 
 def lineup_salary(lineup, data):
 	salary = 0
@@ -99,11 +107,11 @@ def optimize(salary_cap, players_by_pos, data, top_k):
         for j in range(salary_cap / 100 + 1):
             for l in memory[i - 1][j].items():
                 for player in players_by_pos[i - 1]:
-                    salary = int(data.loc[player]['salary'] / 100)
-                    if j + salary <= salary_cap / 100 and player not in set(l[1]) and len(l[1]) == i - 1:
-                        lineup =  l[1][:]
-                        lineup.append(player)
-                        memory[i][j + salary].push(lineup, l[0] + data.loc[player]['points'])
+                	salary = int(data.loc[player]['salary'] / 100)
+                	if j + salary <= salary_cap / 100 and player not in set(l[1]) and len(l[1]) == i - 1:
+                		lineup =  l[1][:]
+                		lineup.append(player)
+                		memory[i][j + salary].push(lineup, l[0] + data.loc[player]['points'])
 
     result = []
     while not memory[len(players_by_pos)][salary_cap / 100].empty():
@@ -115,20 +123,46 @@ def optimize(salary_cap, players_by_pos, data, top_k):
         result.insert(0, l)
     return result
 
-def gen_dk_result(lineups_df, player_slate_id, slate_name):
-    result = lineups_df[['PG', 'SG', 'SF', 'PF', 'C', 'G', 'F', 'UTIL']]
-    result['PG'] = result['PG'].apply(lambda x : player_slate_id.loc[x, 'player_id'])
-    result['SG'] = result['SG'].apply(lambda x : player_slate_id.loc[x, 'player_id'])
-    result['SF'] = result['SF'].apply(lambda x : player_slate_id.loc[x, 'player_id'])
-    result['PF'] = result['PF'].apply(lambda x : player_slate_id.loc[x, 'player_id'])
-    result['C'] = result['C'].apply(lambda x : player_slate_id.loc[x, 'player_id'])
-    result['G'] = result['G'].apply(lambda x : player_slate_id.loc[x, 'player_id'])
-    result['F'] = result['F'].apply(lambda x : player_slate_id.loc[x, 'player_id'])
-    result['UTIL'] = result['UTIL'].apply(lambda x : player_slate_id.loc[x, 'player_id'])
-    result_dir = 'data/submissions/dk/%s-%s-%s' % (year, month, day)
-    if not os.path.exists(result_dir):
+def store_lineups(lineups, projections_data, slate_name, slate_type, slate_id):
+	projections_dir = 'data/lineups/%s-%s-%s' % (year, month, day)
+	if not os.path.exists(projections_dir):
+		os.makedirs(projections_dir)
+	result_dir = 'data/submissions/dk/%s-%s-%s' % (year, month, day)
+	if not os.path.exists(result_dir):
 		os.makedirs(result_dir)
-    result.to_csv(home + result_dir + '/%s.csv' % (slate_name), index=False)
+	if slate_type == 'classic':
+		lineups_df = pd.DataFrame([['rg_%s' % (i + 1)] + lineup for i, lineup in enumerate(lineups)], \
+			columns=['Name', 'SG', 'PG', 'G', 'SF', 'PF', 'F', 'C', 'UTIL', 'Points', 'Salary'])
+		lineups_df.to_csv(home + projections_dir + '/%s.csv' % (slate_name))
+
+		result = lineups_df[['PG', 'SG', 'SF', 'PF', 'C', 'G', 'F', 'UTIL']]
+		result['PG'] = result['PG'].apply(lambda x : projections_data.loc[x, 'player_id'])
+		result['SG'] = result['SG'].apply(lambda x : projections_data.loc[x, 'player_id'])
+		result['SF'] = result['SF'].apply(lambda x : projections_data.loc[x, 'player_id'])
+		result['PF'] = result['PF'].apply(lambda x : projections_data.loc[x, 'player_id'])
+		result['C'] = result['C'].apply(lambda x : projections_data.loc[x, 'player_id'])
+		result['G'] = result['G'].apply(lambda x : projections_data.loc[x, 'player_id'])
+		result['F'] = result['F'].apply(lambda x : projections_data.loc[x, 'player_id'])
+		result['UTIL'] = result['UTIL'].apply(lambda x : projections_data.loc[x, 'player_id'])
+
+		result.to_csv(home + result_dir + '/%s.csv' % (slate_name), index=False)
+	elif slate_type == 'tiers':
+		lineups_df = pd.DataFrame([['rg_%s' % (i + 1)] + lineup for i, lineup in enumerate(lineups)], \
+			columns=['Name', 'T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'Points', 'Salary'])
+		lineups_df.to_csv(home + projections_dir + '/%s.csv' % (slate_name))
+
+		result = lineups_df[['T1', 'T2', 'T3', 'T4', 'T5', 'T6']]
+		result['T1'] = result['T1'].apply(lambda x : projections_data.loc[x, 'player_id'])
+		result['T2'] = result['T2'].apply(lambda x : projections_data.loc[x, 'player_id'])
+		result['T3'] = result['T3'].apply(lambda x : projections_data.loc[x, 'player_id'])
+		result['T4'] = result['T4'].apply(lambda x : projections_data.loc[x, 'player_id'])
+		result['T5'] = result['T5'].apply(lambda x : projections_data.loc[x, 'player_id'])
+		result['T6'] = result['T6'].apply(lambda x : projections_data.loc[x, 'player_id'])
+
+		result.to_csv(home + result_dir + '/%s.csv' % (slate_name), index=False)
+	else:
+		print slate_type + " not supported yet!"
+
 
 if __name__ == "__main__":
 	year = sys.argv[1]
