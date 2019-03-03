@@ -12,28 +12,24 @@ def create_lineups(source, year, month, day, top_k, slate_name = "All Games"):
 	projections_data = pd.read_csv(projections_path, header = 0, index_col = 0)
 	slates_path = home + 'data/extractor/rotogrinders/slates/%s-%s-%s.csv' % (year, month, day)
 	slates_data = pd.read_csv(slates_path, header = 0, index_col = 0)
-	player_slate_id_path = home + 'data/extractor/rotogrinders/player_slate_id/%s-%s-%s.csv' % (year, month, day)
-	player_slate_id_data = pd.read_csv(player_slate_id_path, header = 0, index_col = 0)
 
 	if slate_name not in slates_data.index.tolist():
 		print slate_name + " Not exist!"
 		return
 	slate_id = slates_data.loc[slate_name]['id']
 
-	is_in_slate = projections_data.index.isin(player_slate_id_data[player_slate_id_data['slate_id'] == slate_id].index)
-
-	sgs = projections_data[projections_data['position'].str.contains('SG') & is_in_slate].index.tolist()
-	pgs = projections_data[projections_data['position'].str.contains('PG') & is_in_slate].index.tolist()
-	gs = projections_data[(projections_data['position'].str.contains('SG') | projections_data['position'].str.contains('PG')) & is_in_slate].index.tolist()
-	sfs = projections_data[projections_data['position'].str.contains('SF') & is_in_slate].index.tolist()
-	pfs = projections_data[projections_data['position'].str.contains('PF') & is_in_slate].index.tolist()
-	fs = projections_data[(projections_data['position'].str.contains('SF') | projections_data['position'].str.contains('F')) & is_in_slate].index.tolist()
-	cs = projections_data[projections_data['position'].str.contains('C') & is_in_slate].index.tolist()
-	utils = projections_data[is_in_slate].index.tolist()
+	sgs = projections_data[projections_data['position'].str.contains('SG') & (projections_data['slate_id'] == slate_id)].index.tolist()
+	pgs = projections_data[projections_data['position'].str.contains('PG') & (projections_data['slate_id'] == slate_id)].index.tolist()
+	gs = projections_data[(projections_data['position'].str.contains('SG') | projections_data['position'].str.contains('PG')) & (projections_data['slate_id'] == slate_id)].index.tolist()
+	sfs = projections_data[projections_data['position'].str.contains('SF') & (projections_data['slate_id'] == slate_id)].index.tolist()
+	pfs = projections_data[projections_data['position'].str.contains('PF') & (projections_data['slate_id'] == slate_id)].index.tolist()
+	fs = projections_data[(projections_data['position'].str.contains('SF') | projections_data['position'].str.contains('F')) & (projections_data['slate_id'] == slate_id)].index.tolist()
+	cs = projections_data[projections_data['position'].str.contains('C') & (projections_data['slate_id'] == slate_id)].index.tolist()
+	utils = projections_data[projections_data['slate_id'] == slate_id].index.tolist()
 
 	players_by_pos = [sgs, pgs, gs, sfs, pfs, fs, cs, utils]
 
-	lineups = optimize(50000, players_by_pos, projections_data, top_k)
+	lineups = optimize(50000, players_by_pos, projections_data[projections_data['slate_id'] == slate_id], top_k)
 	lineups_df = pd.DataFrame([['rg_proj_%s' % (i + 1)] + lineup for i, lineup in enumerate(lineups)], \
 		columns=['Name', 'SG', 'PG', 'G', 'SF', 'PF', 'F', 'C', 'UTIL', 'Points', 'Salary'])
 	projections_dir = 'data/lineups/%s-%s-%s' % (year, month, day)
@@ -41,7 +37,7 @@ def create_lineups(source, year, month, day, top_k, slate_name = "All Games"):
 		os.makedirs(projections_dir)
 	lineups_df.to_csv(home + projections_dir + '/%s.csv' % (slate_name))
 
-	gen_dk_result(lineups_df, player_slate_id_data[player_slate_id_data['slate_id'] == slate_id], slate_name)
+	gen_dk_result(lineups_df, projections_data[projections_data['slate_id'] == slate_id], slate_name)
 
 def lineup_salary(lineup, data):
 	salary = 0
