@@ -25,6 +25,8 @@ def get_player_by_pos(projections_data, slates_data, slate_type, slate_id):
 		t5 = projections_data[projections_data['position'].str.contains('T5') & (projections_data['slate_id'] == slate_id)].index.tolist()
 		t6 = projections_data[projections_data['position'].str.contains('T6') & (projections_data['slate_id'] == slate_id)].index.tolist()
 		return [t1, t2, t3, t4, t5, t6]
+	elif slate_type == 'showdown captain mode':
+		pass
 	else:
 		print slate_type + " not supported yet!"
 		return []
