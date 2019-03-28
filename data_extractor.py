@@ -1,6 +1,7 @@
 import pandas as pd
 import json
 import sys
+import os
 
 home = './'
 
@@ -56,8 +57,26 @@ def Extract(year, month, day):
 	slate_df.set_index('name', inplace=True)
 	slate_df.to_csv(home + 'data/extractor/rotogrinders/slates/%s-%s-%s.csv' % (year, month, day))
 
+def ExtractStats():
+	crawler_game_log_path = home + 'data/crawler/nba_stats/player_game_log/2018-19'
+	analysis_dic = {'name' : [], 'GP' : [], 'DK_AVG' : [], 'DK_STD' : []}
+	for file_name in os.listdir(crawler_game_log_path):
+		player_name = file_name.split('.')[0]
+		game_log = pd.read_csv(crawler_game_log_path + '/' + file_name)
+		if game_log.empty:
+			continue
+		analysis_dic['name'].append(player_name)
+		analysis_dic['DK_AVG'].append(game_log['DKP'].mean())
+		analysis_dic['DK_STD'].append(game_log['DKP'].std())
+		analysis_dic['GP'].append(len(game_log.index))
+	analysis_df = pd.DataFrame.from_dict(analysis_dic)
+	analysis_df['DK_COV'] = analysis_df['DK_STD'] / analysis_df['DK_AVG']
+	analysis_df.set_index('name', inplace=True)
+	analysis_df.to_csv(home + 'data/extractor/stats/player_analysis.csv')
+
 if __name__ == "__main__":
 	year = sys.argv[1]
 	month = sys.argv[2]
 	day = sys.argv[3]
 	Extract(year, month, day)
+	ExtractStats()
