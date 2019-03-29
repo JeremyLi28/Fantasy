@@ -59,20 +59,23 @@ def Extract(year, month, day):
 
 def ExtractStats():
 	crawler_game_log_path = home + 'data/crawler/nba_stats/player_game_log/2018-19'
-	analysis_dic = {'name' : [], 'GP' : [], 'DK_AVG' : [], 'DK_STD' : []}
+	analysis_dic = {'Name' : [], 'GP' : [], 'DKP' : [], 'DKP_STD' : [], 'DKP/M' : [], 'DKP/M_STD' : []}
 	for file_name in os.listdir(crawler_game_log_path):
 		player_name = file_name.split('.')[0]
 		game_log = pd.read_csv(crawler_game_log_path + '/' + file_name)
 		if game_log.empty:
 			continue
-		analysis_dic['name'].append(player_name)
-		analysis_dic['DK_AVG'].append(game_log['DKP'].mean())
-		analysis_dic['DK_STD'].append(game_log['DKP'].std())
+		analysis_dic['Name'].append(player_name)
+		analysis_dic['DKP'].append(game_log['DKP'].mean())
+		analysis_dic['DKP_STD'].append(game_log['DKP'].std())
 		analysis_dic['GP'].append(len(game_log.index))
+		analysis_dic['DKP/M'].append((game_log['DKP'] / game_log['MIN']).mean())
+		analysis_dic['DKP/M_STD'].append((game_log['DKP'] / game_log['MIN']).std())
 	analysis_df = pd.DataFrame.from_dict(analysis_dic)
-	analysis_df['DK_COV'] = analysis_df['DK_STD'] / analysis_df['DK_AVG']
-	analysis_df.set_index('name', inplace=True)
-	analysis_df.to_csv(home + 'data/extractor/stats/player_analysis.csv')
+	analysis_df['DKP_COV'] = analysis_df['DKP_STD'] / analysis_df['DKP']
+	analysis_df['DKP/M_COV'] = analysis_df['DKP/M_STD'] / analysis_df['DKP/M']
+	analysis_df.set_index('Name', inplace=True)
+	analysis_df[['GP', 'DKP', 'DKP_COV', 'DKP/M', 'DKP/M_COV']].to_csv(home + 'data/extractor/stats/player_analysis.csv')
 
 if __name__ == "__main__":
 	year = sys.argv[1]
