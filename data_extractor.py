@@ -2,11 +2,13 @@ import pandas as pd
 import json
 import sys
 import os
+from optparse import OptionParser
+import datetime
 
 home = './'
 
-def Extract(year, month, day):
-	player_path = home + 'data/crawler/rotogrinders/projections/%s-%s-%s.json' % (year, month, day)
+def ExtractRG(date):
+	player_path = home + 'data/crawler/rotogrinders/projections/%s.json' % (date)
 	player_json_data = json.loads(open(player_path, 'r').read())
 	player_dict = {'name' : [], 'position' : [], 'slate_id' : [], 'slate_type' : [], 'player_id' : [], 'salary' : [], 'points' : []}
 	showdown_player = {}
@@ -44,9 +46,9 @@ def Extract(year, month, day):
 			idx += 1	   
 	player_df = pd.DataFrame.from_dict(player_dict)
 	player_df.set_index('name', inplace=True)
-	player_df.to_csv(home + 'data/extractor/rotogrinders/projections/%s-%s-%s.csv' % (year, month, day))
+	player_df.to_csv(home + 'data/extractor/rotogrinders/projections/%s.csv' % (date))
 
-	slate_path = home + 'data/crawler/rotogrinders/slates/%s-%s-%s.json' % (year, month, day)
+	slate_path = home + 'data/crawler/rotogrinders/slates/%s.json' % (date)
 	slate_json_data = json.loads(open(slate_path, 'r').read())
 	slate_dict = {'date' : [], 'name' : [], 'id' : []}
 	for key, value in slate_json_data.iteritems():
@@ -55,9 +57,10 @@ def Extract(year, month, day):
 		slate_dict['id'].append(value['importId'] if key != 'All Games' else '0')
 	slate_df = pd.DataFrame.from_dict(slate_dict)
 	slate_df.set_index('name', inplace=True)
-	slate_df.to_csv(home + 'data/extractor/rotogrinders/slates/%s-%s-%s.csv' % (year, month, day))
+	slate_df.to_csv(home + 'data/extractor/rotogrinders/slates/%s.csv' % (date))
+	print "Extract RotogGinders data for %s" % (date)
 
-def ExtractStats():
+def ExtractGameLog(season, season_type):
 	crawler_game_log_path = home + 'data/crawler/nba_stats/player_game_log/2018-19'
 	analysis_dic = {'Name' : [], 'GP' : [], 'DKP' : [], 'DKP_STD' : [], 'DKP/M' : [], 'DKP/M_STD' : []}
 	for file_name in os.listdir(crawler_game_log_path):
@@ -76,10 +79,15 @@ def ExtractStats():
 	analysis_df['DKP/M_COV'] = analysis_df['DKP/M_STD'] / analysis_df['DKP/M']
 	analysis_df.set_index('Name', inplace=True)
 	analysis_df[['GP', 'DKP', 'DKP_COV', 'DKP/M', 'DKP/M_COV']].to_csv(home + 'data/extractor/stats/player_analysis.csv')
+	print "Extract NBA game log for %s %s" % (season, season_type)
 
 if __name__ == "__main__":
-	year = sys.argv[1]
-	month = sys.argv[2]
-	day = sys.argv[3]
-	Extract(year, month, day)
-	ExtractStats()
+	parser = OptionParser()
+	parser.add_option("-d", "--date", dest="date", default=datetime.datetime.today().strftime('%Y-%m-%d'))
+	parser.add_option("--gl", action="store_true", dest="crawl_game_log", default=False)
+	parser.add_option("--rg", action="store_true", dest="crawl_rg", default=False)
+	(options, args) = parser.parse_args()
+	if options.crawl_rg:
+		ExtractRG(options.date)
+	if options.crawl_game_log:
+		ExtractGameLog('2018-19', 'Regular Season')
