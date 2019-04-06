@@ -3,6 +3,8 @@ import sys
 from operator import itemgetter
 import heapq
 import os
+from optparse import OptionParser
+import datetime
 
 home = './'
 
@@ -33,10 +35,10 @@ def get_player_by_pos(projections_data, slates_data, slate_type, slate_id):
 		print slate_type + " not supported yet!"
 		return []
 
-def create_lineups(source, year, month, day, top_k, slate_name = "All Games"):
-	projections_path = home + 'data/extractor/%s/projections/%s-%s-%s.csv' % (source, year, month, day)
+def create_lineups(source, date, top_k, slate_name = "All Games"):
+	projections_path = home + 'data/extractor/%s/projections/%s.csv' % (source, date)
 	projections_data = pd.read_csv(projections_path, header = 0, index_col = 0)
-	slates_path = home + 'data/extractor/rotogrinders/slates/%s-%s-%s.csv' % (year, month, day)
+	slates_path = home + 'data/extractor/rotogrinders/slates/%s.csv' % date
 	slates_data = pd.read_csv(slates_path, header = 0, index_col = 0)
 
 	if slate_name not in slates_data.index.tolist():
@@ -136,10 +138,10 @@ def optimize(salary_cap, players_by_pos, data, top_k):
     return result
 
 def store_lineups(lineups, projections_data, slate_name, slate_type, slate_id):
-	projections_dir = 'data/lineups/%s-%s-%s' % (year, month, day)
+	projections_dir = 'data/lineups/%s' % date
 	if not os.path.exists(projections_dir):
 		os.makedirs(projections_dir)
-	result_dir = 'data/submissions/dk/%s-%s-%s' % (year, month, day)
+	result_dir = 'data/submissions/dk/%s' % date
 	if not os.path.exists(result_dir):
 		os.makedirs(result_dir)
 	if slate_type == 'classic':
@@ -189,9 +191,8 @@ def store_lineups(lineups, projections_data, slate_name, slate_type, slate_id):
 
 
 if __name__ == "__main__":
-	year = sys.argv[1]
-	month = sys.argv[2]
-	day = sys.argv[3]
-	top_k = int(sys.argv[4])
-	slate_name = sys.argv[5]
-	create_lineups('rotogrinders', year, month, day, top_k, slate_name)
+	parser = OptionParser()
+	parser.add_option("-d", "--date", dest="date", default=datetime.datetime.today().strftime('%Y-%m-%d'))
+	parser.add_option("-k", "--top_k", dest="top_l", default=2)
+	parser.add_option("-s", "--slate", dest="slate_name", default="All Games")
+	create_lineups('rotogrinders', date, top_k, slate_name)
