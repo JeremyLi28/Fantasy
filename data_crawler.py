@@ -4,6 +4,7 @@ import sys
 import json
 from optparse import OptionParser
 import datetime
+from datetime import timedelta, date, datetime
 from nba_api.stats.endpoints import commonallplayers
 from nba_api.stats.endpoints import playergamelog
 import time
@@ -11,12 +12,19 @@ import os
 
 home = './'
 
+def daterange(start_date, end_date):
+    for n in range(int ((end_date - start_date).days)):
+        yield start_date + timedelta(n)
+
 def CrawlRG(date):
 	url = 'https://rotogrinders.com/projected-stats/nba-player?site=draftkings&sport=nba&date=%s' % (date)
 	r = urllib.urlopen(url).read()
 	soup = BeautifulSoup(r, features="html.parser")
 	# Have 2 scripts tag, we use the 2nd for now, the usage of first need to be further investigated, related to vegas money line
 	script_tags = soup.find('section', {'class' : 'pag bdy'}).findAll('script')
+	if len(script_tags) < 3:
+		print "Invalid date: %s" % date
+		return
 	player_data = script_tags[2].text.split('\n')[2].strip().split('=')[1].strip()[:-1]
 	slate_data = script_tags[1].text.split('\n')[4].strip().split('slates: ')[1][:-1]
 	schedule_data = script_tags[1].text.split('\n')[5].strip().split('schedules: ')[1][:-1]
@@ -42,7 +50,7 @@ def CrawlGameLog(season, season_type):
 		game_log = playergamelog.PlayerGameLog(player_id=player_id, season_all='2018-19', season_type_all_star=season_type).get_data_frames()[0]
 		double_count = game_log['PTS'].apply(lambda x: 1 if x >= 10 else 0) + game_log['REB'].apply(lambda x: 1 if x >= 10 else 0) + game_log['AST'].apply(lambda x: 1 if x >= 10 else 0) + game_log['STL'].apply(lambda x: 1 if x >= 10 else 0) + game_log['BLK'].apply(lambda x: 1 if x >= 10 else 0)
 		game_log['DKP'] = game_log['PTS'] + 0.5 * game_log['FG3M'] + 1.25 * game_log['REB'] + 1.5 * game_log['AST'] + 2 * (game_log['STL'] + game_log['BLK']) - 0.5 * game_log['TOV'] + double_count.apply(lambda x : 1.5 if x >= 2 else 0) + double_count.apply(lambda x : 3 if x >= 3 else 0)
-		game_log['GAME_DATE'] = game_log['GAME_DATE'].apply(lambda x: datetime.datetime.strptime(x, '%b %d, %Y').strftime('%Y-%m-%d'))
+		game_log['GAME_DATE'] = game_log['GAME_DATE'].apply(lambda x: datetime.strptime(x, '%b %d, %Y').strftime('%Y-%m-%d'))
 		game_log.to_csv(game_log_dir + '/%s.csv' % player_name)
 		time.sleep(1)
 	print "Crawl NBA game log for %s %s" % (season, season_type)
@@ -50,11 +58,17 @@ def CrawlGameLog(season, season_type):
 
 if __name__ == "__main__":
 	parser = OptionParser()
-	parser.add_option("-d", "--date", dest="date", default=datetime.datetime.today().strftime('%Y-%m-%d'))
+	parser.add_option("-d", "--date", dest="date", default=datetime.today().strftime('%Y-%m-%d'))
+	parser.add_option("-s", "--start_date", dest="start_date", default="")
+	parser.add_option("-e", "--end_date", dest="end_date", default="")
 	parser.add_option("--gl", action="store_true", dest="crawl_game_log", default=False)
 	parser.add_option("--rg", action="store_true", dest="crawl_rg", default=False)
 	(options, args) = parser.parse_args()
 	if options.crawl_rg:
-		CrawlRG(options.date)
+		if options.start_date == "" or options.end_date == "":
+			CrawlRG(options.date)
+		else:
+			for date in daterange(datetime.strptime(options.start_date, '%Y-%m-%d'), datetime.strptime(options.end_date, '%Y-%m-%d')):
+				CrawlRG(date.strftime('%Y-%m-%d'))
 	if options.crawl_game_log:
 		CrawlGameLog('2018-19', 'Regular Season')
