@@ -51,7 +51,7 @@ def create_lineups(source, date, top_k, slate_name = "All Games"):
 
 	lineups = optimize(50000, players_by_pos, projections_data[projections_data['slate_id'] == slate_id], top_k)
 
-	store_lineups(lineups, projections_data[projections_data['slate_id'] == slate_id], slate_name, slate_type, slate_id)
+	store_lineups(lineups, date, projections_data[projections_data['slate_id'] == slate_id], slate_name, slate_type, slate_id)
 
 def lineup_salary(lineup, data):
 	salary = 0
@@ -137,7 +137,7 @@ def optimize(salary_cap, players_by_pos, data, top_k):
         result.insert(0, l)
     return result
 
-def store_lineups(lineups, projections_data, slate_name, slate_type, slate_id):
+def store_lineups(lineups, date, projections_data, slate_name, slate_type, slate_id):
 	projections_dir = 'data/lineups/%s' % date
 	if not os.path.exists(projections_dir):
 		os.makedirs(projections_dir)
@@ -193,6 +193,7 @@ def store_lineups(lineups, projections_data, slate_name, slate_type, slate_id):
 if __name__ == "__main__":
 	parser = OptionParser()
 	parser.add_option("-d", "--date", dest="date", default=datetime.datetime.today().strftime('%Y-%m-%d'))
-	parser.add_option("-k", "--top_k", dest="top_l", default=2)
+	parser.add_option("-k", "--top_k", dest="top_k", default=2)
 	parser.add_option("-s", "--slate", dest="slate_name", default="All Games")
-	create_lineups('rotogrinders', date, top_k, slate_name)
+	(options, args) = parser.parse_args()
+	create_lineups('rotogrinders', options.date, options.top_k, options.slate_name)
