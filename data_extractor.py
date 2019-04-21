@@ -12,7 +12,7 @@ def daterange(start_date, end_date):
     for n in range(int ((end_date - start_date).days)):
         yield start_date + timedelta(n)
 
-def ExtractRG(date):
+def RGExtractor(date):
 	player_path = home + 'data/crawler/rotogrinders/projections/%s.json' % (date)
 	if not os.path.isfile(player_path):
 		print "crawler data for %s not exist!" % date
@@ -69,7 +69,7 @@ def ExtractRG(date):
 	slate_df.to_csv(home + 'data/extractor/rotogrinders/slates/%s.csv' % (date))
 	print "Extract RotogGinders data for %s" % (date)
 
-def ExtractGameLog(season, season_type):
+def GameLogExtractor(season, season_type):
 	crawler_game_log_path = home + 'data/crawler/nba_stats/player_game_log/2018-19'
 	analysis_dic = {'Name' : [], 'GP' : [], 'DKP' : [], 'DKP_STD' : [], 'DKP/M' : [], 'DKP/M_STD' : []}
 	for file_name in os.listdir(crawler_game_log_path):
@@ -90,19 +90,50 @@ def ExtractGameLog(season, season_type):
 	analysis_df[['GP', 'DKP', 'DKP_COV', 'DKP/M', 'DKP/M_COV']].to_csv(home + 'data/extractor/stats/player_analysis.csv')
 	print "Extract NBA game log for %s %s" % (season, season_type)
 
+def ResultExtractor(date):
+	results_dir = home + 'data/extractor/results'
+	if not os.path.exists(results_dir):
+		os.makedirs(results_dir)
+	if not os.path.exists(results_dir + '/slates'):
+		os.makedirs(results_dir + '/slates')
+	if not os.path.exists(results_dir + '/contests'):
+		os.makedirs(results_dir + '/contests')
+	slates_result_file = home + 'data/crawler/results/slates/%s.json' % date
+	slates_dict = {'Id' : [], 'GPPAvg': [], 'CashAvg': []}
+	slates = json.loads(open(slates_result_file, 'r').read())
+	for slate in slates:
+		slates_dict['Id'].append(slate['siteSlateId'])
+		if 'summary' in slate:
+			slates_dict['GPPAvg'].append(slate['summary']['gppAverage'])
+			slates_dict['CashAvg'].append(slate['summary']['cashAverage'])
+		else:
+			slates_dict['GPPAvg'].append(0)
+			slates_dict['CashAvg'].append(0)
+	slates_df = pd.DataFrame.from_dict(slates_dict)
+	slates_df.set_index('Id', inplace=True)
+	slates_df.to_csv(results_dir + '/slates/%s.csv' % date)
+	print "Extract results for %s" % date
+
 if __name__ == "__main__":
 	parser = OptionParser()
 	parser.add_option("-d", "--date", dest="date", default=datetime.today().strftime('%Y-%m-%d'))
 	parser.add_option("-s", "--start_date", dest="start_date", default="")
 	parser.add_option("-e", "--end_date", dest="end_date", default="")
-	parser.add_option("--gl", action="store_true", dest="crawl_game_log", default=False)
-	parser.add_option("--rg", action="store_true", dest="crawl_rg", default=False)
+	parser.add_option("-t", dest="crawler_type", default='RG')
 	(options, args) = parser.parse_args()
-	if options.crawl_rg:
+	if options.crawler_type == 'RG':
 		if options.start_date == "" or options.end_date == "":
-			ExtractRG(options.date)
+			RGExtractor(options.date)
 		else:
 			for date in daterange(datetime.strptime(options.start_date, '%Y-%m-%d'), datetime.strptime(options.end_date, '%Y-%m-%d')):
-				ExtractRG(date.strftime('%Y-%m-%d'))
-	if options.crawl_game_log:
-		ExtractGameLog('2018-19', 'Regular Season')
+				RGExtractor(date.strftime('%Y-%m-%d'))
+	elif options.crawler_type == 'GameLog':
+		GameLogExtractor('2018-19', 'Regular Season')
+	elif options.crawler_type == 'Result':
+		if options.start_date == "" or options.end_date == "":
+			ResultExtractor(options.date)
+		else:
+			for date in daterange(datetime.strptime(options.start_date, '%Y-%m-%d'), datetime.strptime(options.end_date, '%Y-%m-%d')):
+				ResultExtractor(date.strftime('%Y-%m-%d'))
+	else:
+		print "Extractor type %s not supported yet." % options.crawler_type

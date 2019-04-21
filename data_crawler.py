@@ -16,7 +16,7 @@ def daterange(start_date, end_date):
     for n in range(int ((end_date - start_date).days)):
         yield start_date + timedelta(n)
 
-def CrawlRG(date):
+def RGCrawler(date):
 	url = 'https://rotogrinders.com/projected-stats/nba-player?site=draftkings&sport=nba&date=%s' % (date)
 	r = urllib.urlopen(url).read()
 	soup = BeautifulSoup(r, features="html.parser")
@@ -36,7 +36,7 @@ def CrawlRG(date):
 		json.dump(player_json_data, player_json_file)
 	print "Crawl RotoGrinders data for %s" % (date)
 
-def CrawlGameLog(season, season_type):
+def GameLogCrawler(season, season_type):
 	game_log_dir = home + 'data/crawler/nba_stats/player_game_log/%s' % season
 	if not os.path.exists(game_log_dir):
 		os.makedirs(game_log_dir)
@@ -55,20 +55,64 @@ def CrawlGameLog(season, season_type):
 		time.sleep(1)
 	print "Crawl NBA game log for %s %s" % (season, season_type)
 
+def ResultCrawler(date):
+	results_dir = home + 'data/crawler/results'
+	if not os.path.exists(results_dir):
+		os.makedirs(results_dir)
+	if not os.path.exists(results_dir + '/slates'):
+		os.makedirs(results_dir + '/slates')
+	if not os.path.exists(results_dir + '/contests'):
+		os.makedirs(results_dir + '/contests')
+	year, month, day = date.split('-')
+	slates_url = "https://resultsdb-api.rotogrinders.com/api//slates?start=%s/%s/%s" % (month, day, year)
+	r = urllib.urlopen(slates_url).read()
+	slates = json.loads(r)
+	nba_slates = []
+	for slate in slates:
+		if slate['sport'] == 3:
+			summary_url = 'https://resultsdb-api.rotogrinders.com/api//slates/%s/summary' % slate['_id']
+			summary = ""
+			try:
+				summary = json.loads(urllib.urlopen(summary_url).read())
+			except ValueError, e:
+				print "No summary find %s" % slate['_id']
+			if summary != "":
+				slate['summary'] = summary
+			nba_slates.append(slate)
+	contests_url = 'https://resultsdb-api.rotogrinders.com/api//contests?start=%s/%s/%s&lean=true' % (month, day, year)
+	r = urllib.urlopen(contests_url).read()
+	contests = json.loads(r)
+	nba_contests = []
+	for contest in contests:
+		if contest['sport'] == 3:
+			nba_contests.append(contest)
+	with open(results_dir + '/slates/%s.json' % (date), 'w') as slate_json_file:
+		json.dump(nba_slates, slate_json_file)
+	with open(results_dir + '/contests/%s.json' % (date), 'w') as contest_json_file:
+		json.dump(nba_contests, contest_json_file)
+	print "Crawl Result data for %s" % (date)
+
 
 if __name__ == "__main__":
 	parser = OptionParser()
 	parser.add_option("-d", "--date", dest="date", default=datetime.today().strftime('%Y-%m-%d'))
 	parser.add_option("-s", "--start_date", dest="start_date", default="")
 	parser.add_option("-e", "--end_date", dest="end_date", default="")
-	parser.add_option("--gl", action="store_true", dest="crawl_game_log", default=False)
-	parser.add_option("--rg", action="store_true", dest="crawl_rg", default=False)
+	parser.add_option("-t", dest="crawler_type", default='RG')
 	(options, args) = parser.parse_args()
-	if options.crawl_rg:
+	if options.crawler_type == 'RG':
 		if options.start_date == "" or options.end_date == "":
-			CrawlRG(options.date)
+			RGCrawler(options.date)
 		else:
 			for date in daterange(datetime.strptime(options.start_date, '%Y-%m-%d'), datetime.strptime(options.end_date, '%Y-%m-%d')):
-				CrawlRG(date.strftime('%Y-%m-%d'))
-	if options.crawl_game_log:
-		CrawlGameLog('2018-19', 'Regular Season')
+				RGCrawler(date.strftime('%Y-%m-%d'))
+	elif options.crawler_type == 'GameLog':
+		GameLogCrawler('2018-19', 'Regular Season')
+	elif options.crawler_type == 'Result':
+		if options.start_date == "" or options.end_date == "":
+			ResultCrawler(options.date)
+		else:
+			for date in daterange(datetime.strptime(options.start_date, '%Y-%m-%d'), datetime.strptime(options.end_date, '%Y-%m-%d')):
+				ResultCrawler(date.strftime('%Y-%m-%d'))
+	else:
+		print "Crawler type %s not supported yet." % options.crawler_type
