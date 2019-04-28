@@ -8,7 +8,7 @@ import datetime
 
 home = './'
 
-def get_player_by_pos(projections_data, slates_data, slate_type, slate_id):
+def get_player_by_pos(projections_data, slate_type, slate_id):
 	if slate_type == 'classic':
 		sgs = projections_data[projections_data['position'].str.contains('SG') & (projections_data['slate_id'] == slate_id)].index.tolist()
 		pgs = projections_data[projections_data['position'].str.contains('PG') & (projections_data['slate_id'] == slate_id)].index.tolist()
@@ -35,23 +35,25 @@ def get_player_by_pos(projections_data, slates_data, slate_type, slate_id):
 		print slate_type + " not supported yet!"
 		return []
 
-def create_lineups(source, date, top_k, slate_name = "All Games"):
+def DPOptimizer(source, date, top_k, slate_id):
 	projections_path = home + 'data/extractor/%s/projections/%s.csv' % (source, date)
 	projections_data = pd.read_csv(projections_path, header = 0, index_col = 0)
-	slates_path = home + 'data/extractor/rotogrinders/slates/%s.csv' % date
-	slates_data = pd.read_csv(slates_path, header = 0, index_col = 0)
+	# slates_path = home + 'data/extractor/rotogrinders/slates/%s.csv' % date
+	# slates_data = pd.read_csv(slates_path, header = 0, index_col = 2)
 
-	if slate_name not in slates_data.index.tolist():
-		print slate_name + " Not exist!"
+	if slate_id not in projections_data['slate_id'].tolist():
+		print "%d Not exist!" % slate_id
 		return
-	slate_id = slates_data.loc[slate_name]['id']
-	slate_type = slate_name.split(':')[2].strip().split('(')[0].lower().strip()
+	slate_type = projections_data[projections_data['slate_id'] == slate_id]['slate_type'][0]
 
-	players_by_pos = get_player_by_pos(projections_data, slates_data, slate_type, slate_id)
+	players_by_pos = get_player_by_pos(projections_data, slate_type, slate_id)
 
 	lineups = optimize(50000, players_by_pos, projections_data[projections_data['slate_id'] == slate_id], top_k)
 
-	store_lineups(lineups, date, projections_data[projections_data['slate_id'] == slate_id], slate_name, slate_type, slate_id)
+	store_lineups(lineups, date, projections_data[projections_data['slate_id'] == slate_id], slate_type, slate_id)
+	print "DPOptimizer for %s slate %s" % (date, slate_id)
+
+	return lineups
 
 def lineup_salary(lineup, data):
 	salary = 0
@@ -137,7 +139,7 @@ def optimize(salary_cap, players_by_pos, data, top_k):
         result.insert(0, l)
     return result
 
-def store_lineups(lineups, date, projections_data, slate_name, slate_type, slate_id):
+def store_lineups(lineups, date, projections_data, slate_type, slate_id):
 	projections_dir = 'data/lineups/%s' % date
 	if not os.path.exists(projections_dir):
 		os.makedirs(projections_dir)
@@ -147,7 +149,7 @@ def store_lineups(lineups, date, projections_data, slate_name, slate_type, slate
 	if slate_type == 'classic':
 		lineups_df = pd.DataFrame([['rg_%s' % (i + 1)] + lineup for i, lineup in enumerate(lineups)], \
 			columns=['Name', 'SG', 'PG', 'G', 'SF', 'PF', 'F', 'C', 'UTIL', 'Points', 'Salary'])
-		lineups_df.to_csv(home + projections_dir + '/%s.csv' % (slate_name))
+		lineups_df.to_csv(home + projections_dir + '/%s.csv' % (slate_id))
 
 		result = lineups_df[['PG', 'SG', 'SF', 'PF', 'C', 'G', 'F', 'UTIL']]
 		result['PG'] = result['PG'].apply(lambda x : projections_data.loc[x, 'player_id'])
@@ -161,7 +163,7 @@ def store_lineups(lineups, date, projections_data, slate_name, slate_type, slate
 	elif slate_type == 'tiers':
 		lineups_df = pd.DataFrame([['rg_%s' % (i + 1)] + lineup for i, lineup in enumerate(lineups)], \
 			columns=['Name', 'T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'Points', 'Salary'])
-		lineups_df.to_csv(home + projections_dir + '/%s.csv' % (slate_name))
+		lineups_df.to_csv(home + projections_dir + '/%s.csv' % (slate_id))
 
 		result = lineups_df[['T1', 'T2', 'T3', 'T4', 'T5', 'T6']]
 		result['T1'] = result['T1'].apply(lambda x : projections_data.loc[x, 'player_id'])
@@ -173,7 +175,7 @@ def store_lineups(lineups, date, projections_data, slate_name, slate_type, slate
 	elif slate_type == 'showdown captain mode':
 		lineups_df = pd.DataFrame([['rg_%s' % (i + 1)] + lineup for i, lineup in enumerate(lineups)], \
 			columns=['Name', 'CPT', 'UTIL1', 'UTIL2', 'UTIL3', 'UTIL4', 'UTIL5', 'Points', 'Salary'])
-		lineups_df.to_csv(home + projections_dir + '/%s.csv' % (slate_name))
+		lineups_df.to_csv(home + projections_dir + '/%s.csv' % (slate_id))
 
 		result = lineups_df[['CPT', 'UTIL1', 'UTIL2', 'UTIL3', 'UTIL4', 'UTIL5']]
 		result['CPT'] = result['CPT'].apply(lambda x : projections_data.loc[x, 'player_id'])
@@ -187,13 +189,13 @@ def store_lineups(lineups, date, projections_data, slate_name, slate_type, slate
 		print slate_type + " not supported yet!"
 		return
 
-	result.to_csv(home + result_dir + '/%s.csv' % (slate_name), index=False)
+	result.to_csv(home + result_dir + '/%s.csv' % (slate_id), index=False)
 
 
 if __name__ == "__main__":
 	parser = OptionParser()
 	parser.add_option("-d", "--date", dest="date", default=datetime.datetime.today().strftime('%Y-%m-%d'))
 	parser.add_option("-k", "--top_k", dest="top_k", default=2)
-	parser.add_option("-s", "--slate", dest="slate_name", default="All Games")
+	parser.add_option("-s", "--slate", dest="slate_id")
 	(options, args) = parser.parse_args()
-	create_lineups('rotogrinders', options.date, options.top_k, options.slate_name)
+	DPOptimizer('rotogrinders', options.date, options.top_k, options.slate_id)
