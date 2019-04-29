@@ -29,6 +29,10 @@ def Experiment(top_k):
 		date = index
 		print "Running", date, int(row['slate_id'])
 		lineups = DPOptimizer('rotogrinders', date, top_k, int(row['slate_id']))
+		if not lineups:
+			continue
+		if not os.path.exists(home + 'data/results/%s.csv' % date):
+			continue
 		dk_result = pd.read_csv(home + 'data/results/%s.csv' % date, header=0, index_col=0)
 		total = 0
 		cash_above_line = 0
@@ -39,7 +43,8 @@ def Experiment(top_k):
 			lineup = lineup[:-2]
 			dkp = 0
 			for player in lineup:
-				dkp += dk_result.loc[player]['DKP']
+				if player in dk_result.index.tolist():
+					dkp += dk_result.loc[player]['DKP']
 			if dkp >= row['cash_avg']:
 				cash_above_line += 1
 			if dkp >= row['gpp_avg']:

@@ -37,13 +37,17 @@ def get_player_by_pos(projections_data, slate_type, slate_id):
 
 def DPOptimizer(source, date, top_k, slate_id):
 	projections_path = home + 'data/extractor/%s/projections/%s.csv' % (source, date)
+	if not os.exists(projections_path):
+		print "projections for %s not exists" % date
+		return []
 	projections_data = pd.read_csv(projections_path, header = 0, index_col = 0)
+	projections_data.drop_duplicates('player_id', inplace=True)
 	# slates_path = home + 'data/extractor/rotogrinders/slates/%s.csv' % date
 	# slates_data = pd.read_csv(slates_path, header = 0, index_col = 2)
 
 	if slate_id not in projections_data['slate_id'].tolist():
 		print "%d Not exist!" % slate_id
-		return
+		return []
 	slate_type = projections_data[projections_data['slate_id'] == slate_id]['slate_type'][0]
 
 	players_by_pos = get_player_by_pos(projections_data, slate_type, slate_id)
@@ -198,4 +202,4 @@ if __name__ == "__main__":
 	parser.add_option("-k", "--top_k", dest="top_k", default=2)
 	parser.add_option("-s", "--slate", dest="slate_id")
 	(options, args) = parser.parse_args()
-	DPOptimizer('rotogrinders', options.date, options.top_k, options.slate_id)
+	DPOptimizer('rotogrinders', options.date, options.top_k, int(options.slate_id))

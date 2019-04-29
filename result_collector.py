@@ -37,7 +37,7 @@ def fetch_rg_proj(date):
 	if not os.path.isfile(proj_path):
 		return pd.DataFrame()
 	proj_data = pd.read_csv(proj_path, header=0, index_col=0)
-	return proj_data[proj_data['slate_type'] == 'classic'][['points', 'salary']].drop_duplicates()
+	return proj_data[proj_data['slate_type'] == 'classic'][['points', 'salary']].drop_duplicates('points')
 
 def collect_result(date):
 	join_res_rg = pd.DataFrame();
@@ -54,7 +54,7 @@ def collect_result(date):
 	join_res = res.join(rg, how='inner', on='name').join(savg, how='inner', on='name')[['DKP', 'salary', 'points', 'SAVG']]
 	join_res.columns = ['DKP', 'DKS', 'RGP', 'SAVG']
 	print "Collect result for %s" % date
-	join_res.to_csv(result_path)
+	join_res.drop_duplicates().to_csv(result_path)
 
 
 if __name__ == "__main__":
