@@ -1,4 +1,5 @@
-from lineup_optimizer import DPOptimizer
+from lineup_optimizer import DPOptimizer, IPOptimizer
+from optparse import OptionParser
 import os
 import pandas as pd
 
@@ -12,7 +13,7 @@ def fetch_cash_line():
 		slates = pd.read_csv(results_dir + '/' + file_name)
 		date = os.path.splitext(file_name)[0]
 		for idx, slate in slates.iterrows():
-			if slate['CashAvg'] != 0:		
+			if slate['CashAvg'] != 0 and slate['CashAvg'] >= 100:		
 				cash_line['date'].append(date)
 				cash_line['slate_id'].append(int(slate['Id']))
 				cash_line['cash_avg'].append(slate['CashAvg'])
@@ -24,11 +25,12 @@ def fetch_cash_line():
 
 def Experiment(top_k):
 	cash_line = fetch_cash_line()
-	results = {'date' : [], 'slate_id' : [], 'dkp_avg' : [], 'cash_above_line': [], 'gpp_above_line': []}
+	results = {'date' : [], 'slate_id' : [], 'dkp_avg' : [], 'cash_avg': [], 'cash_above_line': [], 'gpp_avg': [], 'gpp_above_line': []}
 	for index, row in cash_line.iterrows():
 		date = index
 		print "Running", date, int(row['slate_id'])
-		lineups = DPOptimizer('rotogrinders', date, top_k, int(row['slate_id']))
+		# lineups = DPOptimizer('rotogrinders', date, top_k, int(row['slate_id']))
+		lineups = IPOptimizer('rotogrinders', date, top_k, int(row['slate_id']))
 		if not lineups:
 			continue
 		if not os.path.exists(home + 'data/results/%s.csv' % date):
@@ -51,9 +53,11 @@ def Experiment(top_k):
 				gpp_above_line += 1
 			total += dkp
 		results['date'].append(date)
-		results['slate_id'].append(row['slate_id'])
+		results['slate_id'].append(int(row['slate_id']))
 		results['dkp_avg'].append(total * 1.0 / top_k)
+		results['cash_avg'].append(row['cash_avg'])
 		results['cash_above_line'].append(cash_above_line * 1.0 / top_k)
+		results['gpp_avg'].append(row['gpp_avg'])
 		results['gpp_above_line'].append(gpp_above_line * 1.0 / top_k)
 	results_df = pd.DataFrame.from_dict(results)
 	results_df.set_index('date', inplace=True)
@@ -61,4 +65,7 @@ def Experiment(top_k):
 
 
 if __name__ == '__main__':
-	Experiment(1)
+	parser = OptionParser()
+	parser.add_option("-k", "--top_k", dest="top_k", default=10)
+	(options, args) = parser.parse_args()
+	Experiment(int(options.top_k))

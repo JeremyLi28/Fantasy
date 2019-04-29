@@ -5,6 +5,7 @@ import heapq
 import os
 from optparse import OptionParser
 import datetime
+from pydfs_lineup_optimizer import get_optimizer, Site, Sport, Player
 
 home = './'
 
@@ -37,7 +38,7 @@ def get_player_by_pos(projections_data, slate_type, slate_id):
 
 def DPOptimizer(source, date, top_k, slate_id):
 	projections_path = home + 'data/extractor/%s/projections/%s.csv' % (source, date)
-	if not os.exists(projections_path):
+	if not os.path.exists(projections_path):
 		print "projections for %s not exists" % date
 		return []
 	projections_data = pd.read_csv(projections_path, header = 0, index_col = 0)
@@ -195,6 +196,35 @@ def store_lineups(lineups, date, projections_data, slate_type, slate_id):
 
 	result.to_csv(home + result_dir + '/%s.csv' % (slate_id), index=False)
 
+def IPOptimizer(source, date, top_k, slate_id):
+	projections_path = home + 'data/extractor/%s/projections/%s.csv' % (source, date)
+	if not os.path.exists(projections_path):
+		print "projections for %s not exists" % date
+		return []
+	projections_data = pd.read_csv(projections_path, header = 0, index_col = 0)
+	projections_data.drop_duplicates('player_id', inplace=True)
+
+	if slate_id not in projections_data['slate_id'].tolist():
+		print "%d not exist!" % slate_id
+		return []
+	slate_type = projections_data[projections_data['slate_id'] == slate_id]['slate_type'][0]
+	if slate_type != 'classic':
+		print "%s not supported!" % slate_type
+		return []
+
+	players = []
+	for i, p in projections_data[projections_data['slate_id'] == slate_id].iterrows():
+		players.append(Player(p['player_id'], i.split(' ')[0], i.split(' ')[1], p['position'].split('/'), 'Team', p['salary'], p['points']))
+		optimizer = get_optimizer(Site.DRAFTKINGS, Sport.BASKETBALL)
+	optimizer.load_players(players)
+	lineups = optimizer.optimize(n=top_k)
+	results = []
+	for lineup in lineups:
+		r = [p.full_name for p in lineup.lineup]
+		r.append(lineup.fantasy_points_projection)
+		r.append(lineup.salary_costs)
+		results.append(r)
+	return results
 
 if __name__ == "__main__":
 	parser = OptionParser()
