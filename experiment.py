@@ -30,7 +30,7 @@ def Experiment(top_k):
 		date = index
 		print "Running", date, int(row['slate_id'])
 		# lineups = DPOptimizer('rotogrinders', date, top_k, int(row['slate_id']))
-		lineups = IPOptimizer('rotogrinders', date, top_k, int(row['slate_id']))
+		lineups = IPOptimizer(date, top_k, int(row['slate_id']))
 		if not lineups:
 			continue
 		if not os.path.exists(home + 'data/results/%s.csv' % date):
@@ -67,5 +67,6 @@ def Experiment(top_k):
 if __name__ == '__main__':
 	parser = OptionParser()
 	parser.add_option("-k", "--top_k", dest="top_k", default=10)
+	parser.add_option("-t", "--type",  dest="proj_type", default="season_avg")
 	(options, args) = parser.parse_args()
 	Experiment(int(options.top_k))

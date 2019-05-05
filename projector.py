@@ -65,7 +65,7 @@ def RollingAvgProjector(proj_type, date):
 			continue
 		if not game_log[game_log['GAME_DATE'] < date].empty:
 			result_dic['name'].append(player_name)
-			result_dic['Proj'].append(game_log[game_log['GAME_DATE'] < date][-n:]['DKP'].mean())
+			result_dic['Proj'].append(game_log[game_log['GAME_DATE'] < date][:n]['DKP'].mean())
 
 	result_df = pd.DataFrame.from_dict(result_dic)
 	result_df.set_index('name', inplace=True)
