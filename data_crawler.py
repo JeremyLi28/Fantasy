@@ -9,12 +9,15 @@ from nba_api.stats.endpoints import commonallplayers
 from nba_api.stats.endpoints import playergamelog
 import time
 import os
+from draft_kings_client import DraftKingsClient, Sport
+from utils import CreateDirectoryIfNotExist, GetRawDataPath, GetExtractedDataPath
+import pandas as pd
 
 home = './'
 
 def daterange(start_date, end_date):
-    for n in range(int ((end_date - start_date).days)):
-        yield start_date + timedelta(n)
+	for n in range(int ((end_date - start_date).days)):
+		yield start_date + timedelta(n)
 
 def RGCrawler(date):
 	url = 'https://rotogrinders.com/projected-stats/nba-player?site=draftkings&sport=nba&date=%s' % (date)
@@ -92,6 +95,41 @@ def ResultCrawler(date):
 		json.dump(nba_contests, contest_json_file)
 	print "Crawl Result data for %s" % (date)
 
+def DKCrawler():
+	CreateDirectoryIfNotExist(GetExtractedDataPath() + '/draftkings')
+	dk_info = DraftKingsClient.get_contests(sport=Sport.nba)
+	if not dk_info.contests:
+		print "Contests Empty!"
+	if not dk_info.draft_groups:
+		print "Slates Empty!"
+	date = dk_info.contests[0].start_timestamp.strftime('%Y-%m-%d')
+	CreateDirectoryIfNotExist(GetExtractedDataPath() + '/draftkings/contests')
+	contests_dict = {'CONTEST_ID': [], 'SLATE_ID' : [], 'NAME': [], 'START_TIMESTAMP': [], 'SPORT': [], 'FANTASY_PLAYER_POINTS': [], \
+		'IS_GUARANTEED': [], 'IS_STARRED': [], 'IS_HEAD_TO_HEAD': [], 'IS_DOUBLE_UP': [], 'IS_FIFTY_FIFTY': [], 'TOTAL_ENTRIES': [], \
+		'MAXIMUM_ENTRIES': [], 'ENTRY_FEE': [], 'TOTAL_PAYOUT': []}
+	for contest in dk_info.contests:
+		if contest.sport is not Sport.nba:
+			continue
+	   	contests_dict['CONTEST_ID'].append(contest.contest_id)
+		contests_dict['START_TIMESTAMP'].append(contest.start_timestamp)
+		contests_dict['FANTASY_PLAYER_POINTS'].append(contest.fantasy_player_points)
+		contests_dict['SPORT'].append(contest.sport)
+		contests_dict['NAME'].append(contest.name)
+		contests_dict['IS_GUARANTEED'].append(contest.is_guaranteed)
+		contests_dict['IS_STARRED'].append(contest.is_starred)
+		contests_dict['IS_HEAD_TO_HEAD'].append(contest.is_head_to_head)
+		contests_dict['IS_DOUBLE_UP'].append(contest.is_double_up)
+		contests_dict['IS_FIFTY_FIFTY'].append(contest.is_fifty_fifty)
+		contests_dict['TOTAL_ENTRIES'].append(contest.total_entries)
+		contests_dict['MAXIMUM_ENTRIES'].append(contest.maximum_entries)
+		contests_dict['ENTRY_FEE'].append(contest.entry_fee)
+		contests_dict['TOTAL_PAYOUT'].append(contest.total_payout)
+		contests_dict['SLATE_ID'].append(contest.draft_group_id)
+	contests_df = pd.DataFrame.from_dict(contests_dict)
+	contests_df.set_index('CONTEST_ID')
+	contests_df.to_csv(GetExtractedDataPath() + '/draftkings/contests/%s.csv' % date)
+	print "Crawl DraftKings Contests for %s" % date
+
 
 if __name__ == "__main__":
 	parser = OptionParser()
@@ -114,5 +152,7 @@ if __name__ == "__main__":
 		else:
 			for date in daterange(datetime.strptime(options.start_date, '%Y-%m-%d'), datetime.strptime(options.end_date, '%Y-%m-%d')):
 				ResultCrawler(date.strftime('%Y-%m-%d'))
+	elif options.crawler_type == 'DK':
+		DKCrawler()
 	else:
 		print "Crawler type %s not supported yet." % options.crawler_type
