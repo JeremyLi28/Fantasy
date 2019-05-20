@@ -23,10 +23,18 @@ def MAE(expected, actual, n):
 def TP(expected, actual):
 	return expected.sum() / actual.sum()
 
+def SSE(expected, actual):
+	mse_df = pow(expected - actual, 2)
+	return mse_df.sum()
+
+def TSS(actual):
+	tss_df = pow(actual - actual.mean(), 2)
+	return tss_df.sum()
+
 def analysis(proj_type, verbose):
 	results_dir = home + 'data/results/daily'
 	proj_dir = home + 'data/projections/%s' % proj_type
-	res_dict = {'Date' : [], 'RMSE' : [], 'NRMSE' : [], 'MAE': [],  'NMAE': [], 'TP': [], 'COV' : []}
+	res_dict = {'Date' : [], 'RMSE' : [], 'NRMSE' : [], 'MAE': [],  'NMAE': [], 'TP': [], 'COV' : [], 'R2': []}
 	for file_name in os.listdir(proj_dir):
 		if file_name.startswith('.'):
 			continue
@@ -53,6 +61,7 @@ def analysis(proj_type, verbose):
 		res_dict['NMAE'].append(MAE(proj_res['Proj'], proj_res['DKP'], n) / dkp_mean)
 		res_dict['TP'].append(TP(proj_res['Proj'], proj_res['DKP']))
 		res_dict['COV'].append(len(proj_res) * 1.0 / len(res))
+		res_dict['R2'].append(1 - SSE(proj_res['Proj'], proj_res['DKP']) * 1.0 / TSS(proj_res['DKP']))
 	res_df = pd.DataFrame.from_dict(res_dict)
 	res_df.set_index('Date', inplace=True)
 	res_df.sort_index(inplace=True)
