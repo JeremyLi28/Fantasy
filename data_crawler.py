@@ -12,6 +12,7 @@ import os
 from draft_kings_client import DraftKingsClient, Sport
 from utils import CreateDirectoryIfNotExist, GetRawDataPath, GetExtractedDataPath
 import pandas as pd
+import urllib2
 
 home = './'
 
