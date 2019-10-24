@@ -68,6 +68,11 @@ def RGExtractor(date):
 	slate_df.set_index('name', inplace=True)
 	slate_df.to_csv(home + 'data/extractor/rotogrinders/slates/%s.csv' % (date))
 	print "Extract RotogGinders data for %s" % (date)
+	print "========== Slate ========="
+	print slate_df
+	print "========= Projections %d ========" % len(player_df)
+	print player_df.head()
+	print "...."
 
 def GameLogExtractor(season, season_type):
 	crawler_game_log_path = home + 'data/crawler/nba_stats/player_game_log/2018-19'
