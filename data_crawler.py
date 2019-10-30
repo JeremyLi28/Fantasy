@@ -10,7 +10,7 @@ from nba_api.stats.endpoints import playergamelog
 import time
 import os
 from draft_kings_client import DraftKingsClient, Sport
-from utils import CreateDirectoryIfNotExist, GetRawDataPath, GetExtractedDataPath
+from utils import CreateDirectoryIfNotExist, GetRawDataPath, GetExtractedDataPath, DRAFTKINGS_SLATE_TYPE
 import pandas as pd
 import urllib2
 
@@ -24,7 +24,7 @@ def RGCrawler(date):
 	url = 'https://rotogrinders.com/projected-stats/nba-player?site=draftkings&sport=nba&date=%s' % (date)
 	# r = urllib.urlopen(url).read()
 	opener = urllib2.build_opener()
-	cookie = '__stripe_mid=14f608c9-a3ac-4508-8624-0e8c1a4262b7; _vwo_uuid_v2=D8571232E26769C45A2BE4B81A66AD483|9e366072579df08811145d71a74097bf; _bc_int_ads_2_rotogrinders.com=1; _ga=GA1.2.1221405473.1571640880; _gid=GA1.2.373219085.1571640880; __smVID=f2f12378cd9f52e30bff1c69a44aa0c45b87d7e88081f4fe3b5a9dc00f333f69; _fbp=fb.1.1571640879646.1802847534; __utmc=123114120; __utmz=123114120.1571640879.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _hjid=802699a2-f411-4289-9e86-b88469636384; _hjIncludedInSample=1; ELOQUA=GUID=F2B533A623124AA699AAFDA9EBCC35B9; __smToken=45B2NdevgBwvU3AGoR5R4vA4; __smListBuilderShown=Sun%20Oct%2020%202019%2023:54:47%20GMT-0700%20(Pacific%20Daylight%20Time); remember_82e5d2c56bdd0811318f0cf078b78bfc=eyJpdiI6Ik9LYnh2UCt5ZVR0MUVXR01jWExLd2c9PSIsInZhbHVlIjoianoyMlBpbG0zK3BVSUxSa0V6ZHNINUdaYXJ0c2J0TG92T1U3dDBzOUxiU1JuMzJKd1lUK20xd3pkMWlvY1lQbSIsIm1hYyI6IjI3MGU4M2MwY2NmNzdjZGYyN2FmNWFiMTMwZWM0MzViODg5NmI2OTc2ZTk1MzIzMTAxZDk4MmZmNDNhYjQyM2MifQ%3D%3D; _ia_loc=0; _hjSessionResumed=true; __stripe_sid=3bf77123-8457-4fb7-9ec2-113cabf69e5a; __utma=123114120.1221405473.1571640880.1571787367.1571794537.4; bc-cookie-consent=1; laravel_session=eyJpdiI6InN3Y3R5SHhcLzJzVGl4bTUrcG4zeCt3PT0iLCJ2YWx1ZSI6IjF4aXlUTUNjOUNJeDBOUk1LV1RqMzBCcHU3UHVpWkE2Z2t1OEkxeW1NcWw3MVY5Q0JXMUNyUlpkWk5GM2xCVlZjdW9laWtHeDFhT0VSTVZscGNMdkJnPT0iLCJtYWMiOiIxODdlYjM3NmRiMjhkMGI3YzJhZTdhY2I3MDdkOTVmMDBhYzRiOGFhMjIwZmE3ZmI4ZDMzODAzODA4NmFkYzZkIn0%3D; logged_in=eyJpdiI6IkV1T293SW5lZFlWM0Z2SDdzRllLZXc9PSIsInZhbHVlIjoiQlNqNURnZXR1bnIwV0pVbHRKOGRlUT09IiwibWFjIjoiOGI0Nzc3OGViMGMxYWE1MTc0ZTRkNTQ0ZjFhZTNjOGViNjkzM2RiNjczMTc0MjU0YzI5ODViM2VkN2ZkZWQ3NCJ9; mp_a66a4cee01f72ed7dc67dfeadfd98392_mixpanel=%7B%22distinct_id%22%3A%20278646%2C%22%24device_id%22%3A%20%2216ded18a7441e0-028849367fc31d-1d3d6b55-1aeaa0-16ded18a745a76%22%2C%22%24initial_referrer%22%3A%20%22%24direct%22%2C%22%24initial_referring_domain%22%3A%20%22%24direct%22%2C%22__mps%22%3A%20%7B%7D%2C%22__mpso%22%3A%20%7B%7D%2C%22__mpus%22%3A%20%7B%7D%2C%22__mpa%22%3A%20%7B%7D%2C%22__mpu%22%3A%20%7B%7D%2C%22__mpr%22%3A%20%5B%5D%2C%22__mpap%22%3A%20%5B%5D%2C%22%24user_id%22%3A%20278646%7D; __utmb=123114120.12.9.1571795015017'
+	cookie = open(home + 'cookie.txt').read()
 	opener.addheaders.append(('Cookie', cookie))
 	r = opener.open(url).read()
 	soup = BeautifulSoup(r, features="html.parser")
@@ -133,7 +133,19 @@ def DKCrawler():
 	contests_df = pd.DataFrame.from_dict(contests_dict)
 	contests_df.set_index('CONTEST_ID')
 	contests_df.to_csv(GetExtractedDataPath() + '/draftkings/contests/%s.csv' % date)
-	print "Crawl DraftKings Contests for %s" % date
+	print "Crawl DraftKings Contests for %s, # of contests: %d" % (date, len(contests_df))
+
+	CreateDirectoryIfNotExist(GetExtractedDataPath() + '/draftkings/slates')
+	slates_dict = {'SLATE_ID': [], 'SLATE_TYPE': [], 'START_TIMESTAMP': []}
+	for slate in dk_info.draft_groups:
+		slates_dict['SLATE_ID'].append(slate.id)
+		slates_dict['SLATE_TYPE'].append(DRAFTKINGS_SLATE_TYPE[slate.contest_type_id])
+		slates_dict['START_TIMESTAMP'].append(slate.start_datetime)
+	slates_df = pd.DataFrame.from_dict(slates_dict)
+	slates_df.set_index('SLATE_ID')
+	slates_df.to_csv(GetExtractedDataPath() + '/draftkings/slates/%s.csv' % date)
+	print "Crawl DraftKings Slates for %s: " % date
+	print slates_df
 
 
 if __name__ == "__main__":
