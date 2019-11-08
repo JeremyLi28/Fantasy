@@ -121,7 +121,7 @@ def DKCrawler():
 		contest_time = contest.start_timestamp.astimezone(pytz.timezone('America/Los_Angeles'))
 		if contest_time.date() != date:
 			continue
-	   	contests_dict['CONTEST_ID'].append(contest.contest_id)
+		contests_dict['CONTEST_ID'].append(contest.contest_id)
 		contests_dict['START_TIMESTAMP'].append(contest.start_timestamp.astimezone(pytz.timezone('America/Los_Angeles')))
 		contests_dict['FANTASY_PLAYER_POINTS'].append(contest.fantasy_player_points)
 		contests_dict['SPORT'].append(contest.sport)
