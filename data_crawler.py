@@ -8,7 +8,7 @@ from nba_api.stats.endpoints import commonallplayers
 from nba_api.stats.endpoints import playergamelog
 import time
 import os
-from draft_kings_client import DraftKingsClient, Sport
+from draft_kings import DraftKingsClient, Sport
 from utils import CreateDirectoryIfNotExist, GetRawDataPath, GetExtractedDataPath, DRAFTKINGS_SLATE_TYPE, ConvertTimestampStringToLocalDatetime
 import pandas as pd
 import urllib2
