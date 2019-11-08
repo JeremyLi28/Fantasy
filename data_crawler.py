@@ -1,5 +1,4 @@
 from bs4 import BeautifulSoup
-import urllib
 import sys
 import json
 from optparse import OptionParser
@@ -23,7 +22,6 @@ def daterange(start_date, end_date):
 
 def RGCrawler(date):
 	url = 'https://rotogrinders.com/projected-stats/nba-player?site=draftkings&sport=nba&date=%s' % (date)
-	# r = urllib.urlopen(url).read()
 	opener = urllib2.build_opener()
 	cookie = open(home + 'cookie.txt').read()
 	opener.addheaders.append(('Cookie', cookie))
