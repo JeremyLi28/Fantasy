@@ -30,7 +30,7 @@ def RGCrawler(date):
 	# Have 2 scripts tag, we use the 2nd for now, the usage of first need to be further investigated, related to vegas money line
 	script_tags = soup.find('section', {'class' : 'pag bdy'}).findAll('script')
 	if len(script_tags) < 3:
-		print "Invalid date: %s" % date
+		print ("Invalid date: %s" % date)
 		return
 	player_data = script_tags[2].text.split('\n')[2].strip().split('=')[1].strip()[:-1]
 	slate_data = script_tags[1].text.split('\n')[4].strip().split('slates: ')[1][:-1]
@@ -41,7 +41,7 @@ def RGCrawler(date):
 		json.dump(slate_json_data, slate_json_file)
 	with open(home + 'data/crawler/rotogrinders/projections/%s.json' % (date), 'w') as player_json_file:
 		json.dump(player_json_data, player_json_file)
-	print "Crawl RotoGrinders data for %s" % (date)
+	print ("Crawl RotoGrinders data for %s" % (date))
 
 def GameLogCrawler(season, season_type):
 	game_log_dir = home + 'data/crawler/nba_stats/player_game_log/%s' % season
@@ -60,7 +60,7 @@ def GameLogCrawler(season, season_type):
 		game_log['GAME_DATE'] = game_log['GAME_DATE'].apply(lambda x: datetime.strptime(x, '%b %d, %Y').strftime('%Y-%m-%d'))
 		game_log.to_csv(game_log_dir + '/%s.csv' % player_name)
 		time.sleep(1)
-	print "Crawl NBA game log for %s %s" % (season, season_type)
+	print ("Crawl NBA game log for %s %s" % (season, season_type))
 
 def ResultCrawler(date):
 	results_dir = home + 'data/crawler/results'
@@ -97,15 +97,15 @@ def ResultCrawler(date):
 		json.dump(nba_slates, slate_json_file)
 	with open(results_dir + '/contests/%s.json' % (date), 'w') as contest_json_file:
 		json.dump(nba_contests, contest_json_file)
-	print "Crawl Result data for %s" % (date)
+	print ("Crawl Result data for %s" % (date))
 
 def DKCrawler():
 	CreateDirectoryIfNotExist(GetExtractedDataPath() + '/draftkings')
 	dk_info = DraftKingsClient.get_contests(sport=Sport.nba)
 	if not dk_info.contests:
-		print "Contests Empty!"
+		print ("Contests Empty!")
 	if not dk_info.draft_groups:
-		print "Slates Empty!"
+		print ("Slates Empty!")
 	date = ConvertTimestampStringToLocalDatetime(dk_info.draft_groups[0].start_datetime).date()
 	for slate in dk_info.draft_groups:
 		slate_date = ConvertTimestampStringToLocalDatetime(slate.start_datetime).date()
@@ -139,7 +139,7 @@ def DKCrawler():
 	contests_df = pd.DataFrame.from_dict(contests_dict)
 	contests_df.set_index('CONTEST_ID')
 	contests_df.to_csv(GetExtractedDataPath() + '/draftkings/contests/%s.csv' % date.strftime('%Y-%m-%d'))
-	print "Crawl DraftKings Contests for %s, # of contests: %d" % (date.strftime('%Y-%m-%d'), len(contests_df))
+	print ("Crawl DraftKings Contests for %s, # of contests: %d" % (date.strftime('%Y-%m-%d'), len(contests_df)))
 
 	CreateDirectoryIfNotExist(GetExtractedDataPath() + '/draftkings/slates')
 	slates_dict = {'SLATE_ID': [], 'SLATE_TYPE': [], 'START_TIMESTAMP': []}
@@ -153,8 +153,8 @@ def DKCrawler():
 	slates_df = pd.DataFrame.from_dict(slates_dict)
 	slates_df.set_index('SLATE_ID')
 	slates_df.to_csv(GetExtractedDataPath() + '/draftkings/slates/%s.csv' % date.strftime('%Y-%m-%d'))
-	print "Crawl DraftKings Slates for %s: " % date.strftime('%Y-%m-%d')
-	print slates_df
+	print ("Crawl DraftKings Slates for %s: " % date.strftime('%Y-%m-%d'))
+	print (slates_df)
 
 
 if __name__ == "__main__":
@@ -181,4 +181,4 @@ if __name__ == "__main__":
 	elif options.crawler_type == 'DK':
 		DKCrawler()
 	else:
-		print "Crawler type %s not supported yet." % options.crawler_type
+		print ("Crawler type %s not supported yet." % options.crawler_type)
