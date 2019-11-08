@@ -82,7 +82,7 @@ def ResultCrawler(date):
 			try:
 				summary = json.loads(urllib.urlopen(summary_url).read())
 			except ValueError, e:
-				print "No summary find %s" % slate['_id']
+				print ("No summary find %s" % slate['_id'])
 			if summary != "":
 				slate['summary'] = summary
 			nba_slates.append(slate)
