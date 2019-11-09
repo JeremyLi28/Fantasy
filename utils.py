@@ -4,19 +4,24 @@ from datetime import datetime
 import pytz
 
 home = './'
-raw_data_path = home + 'data/extractor'
+metadata_path = 'data/metatdata'
+raw_data_path = home + 'data/raw'
 extracted_data_path = home + 'data/extractor'
 
 class SlateType(Enum):
     CLASSIC = "CLASSIC"
     TIERS = "TIERS"
     SHOWDOWN = "SHOWDOWN"
+    IN_GAME_SHOWDOWN = 'IN_GAME_SHOWDOWN'
 
-DRAFTKINGS_SLATE_TYPE = {70: SlateType.CLASSIC.name, 73: SlateType.TIERS.name, 81: SlateType.SHOWDOWN.name}
+DRAFTKINGS_SLATE_TYPE = {70: SlateType.CLASSIC.name, 73: SlateType.TIERS.name, 81: SlateType.SHOWDOWN.name, 112: SlateType.IN_GAME_SHOWDOWN.name}
 
 def CreateDirectoryIfNotExist(path):
 	if not os.path.exists(path):
 		os.makedirs(path)
+
+def GetMetaDataPath():
+	return metadata_path
 
 def GetRawDataPath():
 	return raw_data_path

@@ -8,10 +8,11 @@ from nba_api.stats.endpoints import commonallplayers
 from nba_api.stats.endpoints import playergamelog
 import time
 import os
-from draft_kings import DraftKingsClient, Sport
-from utils import CreateDirectoryIfNotExist, GetRawDataPath, GetExtractedDataPath, DRAFTKINGS_SLATE_TYPE, ConvertTimestampStringToLocalDatetime
+from draft_kings.data import Sport
+from draft_kings.client import contests
+from utils import CreateDirectoryIfNotExist, GetRawDataPath, DRAFTKINGS_SLATE_TYPE, GetMetaDataPath
 import pandas as pd
-import urllib2
+import urllib3
 import pytz
 
 home = './'
@@ -22,7 +23,7 @@ def daterange(start_date, end_date):
 
 def RGCrawler(date):
 	url = 'https://rotogrinders.com/projected-stats/nba-player?site=draftkings&sport=nba&date=%s' % (date)
-	opener = urllib2.build_opener()
+	opener = urllib3.build_opener()
 	cookie = open(home + 'cookie.txt').read()
 	opener.addheaders.append(('Cookie', cookie))
 	r = opener.open(url).read()
@@ -100,64 +101,67 @@ def ResultCrawler(date):
 	print ("Crawl Result data for %s" % (date))
 
 def DKCrawler():
-	CreateDirectoryIfNotExist(GetExtractedDataPath() + '/draftkings')
-	dk_info = DraftKingsClient.get_contests(sport=Sport.nba)
-	if not dk_info.contests:
+	CreateDirectoryIfNotExist(GetMetaDataPath() + '/draftkings')
+	dk_info = contests(sport=Sport.NBA)
+	if not dk_info['contests']:
 		print ("Contests Empty!")
-	if not dk_info.draft_groups:
+	if not dk_info['groups']:
 		print ("Slates Empty!")
-	date = ConvertTimestampStringToLocalDatetime(dk_info.draft_groups[0].start_datetime).date()
-	for slate in dk_info.draft_groups:
-		slate_date = ConvertTimestampStringToLocalDatetime(slate.start_datetime).date()
+	date = dk_info['groups'][0]['starts_at'].astimezone(pytz.timezone('America/Los_Angeles')).date()
+	for slate in dk_info['groups']:
+		slate_date = slate['starts_at'].astimezone(pytz.timezone('America/Los_Angeles')).date()
 		if slate_date < date:
 			date = slate_date
-	CreateDirectoryIfNotExist(GetExtractedDataPath() + '/draftkings/contests')
+	CreateDirectoryIfNotExist(GetMetaDataPath() + '/draftkings/contests')
 	contests_dict = {'CONTEST_ID': [], 'SLATE_ID' : [], 'NAME': [], 'START_TIMESTAMP': [], 'SPORT': [], 'FANTASY_PLAYER_POINTS': [], \
 		'IS_GUARANTEED': [], 'IS_STARRED': [], 'IS_HEAD_TO_HEAD': [], 'IS_DOUBLE_UP': [], 'IS_FIFTY_FIFTY': [], 'TOTAL_ENTRIES': [], \
 		'MAXIMUM_ENTRIES': [], 'ENTRY_FEE': [], 'TOTAL_PAYOUT': []}
-	for contest in dk_info.contests:
-		if contest.sport is not Sport.nba:
+	for contest in dk_info['contests']:
+		if contest['sport'] is not Sport.NBA:
 			continue
-		contest_time = contest.start_timestamp.astimezone(pytz.timezone('America/Los_Angeles'))
+		contest_time = contest['starts_at'].astimezone(pytz.timezone('America/Los_Angeles'))
 		if contest_time.date() != date:
 			continue
-		contests_dict['CONTEST_ID'].append(contest.contest_id)
-		contests_dict['START_TIMESTAMP'].append(contest.start_timestamp.astimezone(pytz.timezone('America/Los_Angeles')))
-		contests_dict['FANTASY_PLAYER_POINTS'].append(contest.fantasy_player_points)
-		contests_dict['SPORT'].append(contest.sport)
-		contests_dict['NAME'].append(contest.name)
-		contests_dict['IS_GUARANTEED'].append(contest.is_guaranteed)
-		contests_dict['IS_STARRED'].append(contest.is_starred)
-		contests_dict['IS_HEAD_TO_HEAD'].append(contest.is_head_to_head)
-		contests_dict['IS_DOUBLE_UP'].append(contest.is_double_up)
-		contests_dict['IS_FIFTY_FIFTY'].append(contest.is_fifty_fifty)
-		contests_dict['TOTAL_ENTRIES'].append(contest.total_entries)
-		contests_dict['MAXIMUM_ENTRIES'].append(contest.maximum_entries)
-		contests_dict['ENTRY_FEE'].append(contest.entry_fee)
-		contests_dict['TOTAL_PAYOUT'].append(contest.total_payout)
-		contests_dict['SLATE_ID'].append(contest.draft_group_id)
+		contests_dict['CONTEST_ID'].append(contest['id'])
+		contests_dict['START_TIMESTAMP'].append(contest_time)
+		contests_dict['FANTASY_PLAYER_POINTS'].append(contest['fantasy_player_points'])
+		contests_dict['SPORT'].append(contest['sport'])
+		contests_dict['NAME'].append(contest['name'])
+		contests_dict['IS_GUARANTEED'].append(contest['guaranteed'])
+		contests_dict['IS_STARRED'].append(contest['starred'])
+		contests_dict['IS_HEAD_TO_HEAD'].append(contest['head_to_head'])
+		contests_dict['IS_DOUBLE_UP'].append(contest['double_up'])
+		contests_dict['IS_FIFTY_FIFTY'].append(contest['fifty_fifty'])
+		contests_dict['TOTAL_ENTRIES'].append(contest['entries']['total'])
+		contests_dict['MAXIMUM_ENTRIES'].append(contest['entries']['maximum'])
+		contests_dict['ENTRY_FEE'].append(contest['entries']['fee'])
+		contests_dict['TOTAL_PAYOUT'].append(contest['payout'])
+		contests_dict['SLATE_ID'].append(contest['draft_group_id'])
 	contests_df = pd.DataFrame.from_dict(contests_dict)
 	contests_df.set_index('CONTEST_ID')
-	contests_df.to_csv(GetExtractedDataPath() + '/draftkings/contests/%s.csv' % date.strftime('%Y-%m-%d'))
+	contests_df.to_csv(GetMetaDataPath() + '/draftkings/contests/%s.csv' % date.strftime('%Y-%m-%d'))
 	print ("Crawl DraftKings Contests for %s, # of contests: %d" % (date.strftime('%Y-%m-%d'), len(contests_df)))
 
-	CreateDirectoryIfNotExist(GetExtractedDataPath() + '/draftkings/slates')
-	slates_dict = {'SLATE_ID': [], 'SLATE_TYPE': [], 'START_TIMESTAMP': []}
-	for slate in dk_info.draft_groups:
-		slate_time = ConvertTimestampStringToLocalDatetime(slate.start_datetime)
+	CreateDirectoryIfNotExist(GetMetaDataPath() + '/draftkings/slates')
+	slates_dict = {'SLATE_ID': [], 'SLATE_TYPE': [], 'START_TIMESTAMP': [], 'SPORT': [], 'GAMES_COUNT': []}
+	for slate in dk_info['groups']:
+		slate_time = slate['starts_at'].astimezone(pytz.timezone('America/Los_Angeles'))
 		if slate_time.date() != date:
 			continue
-		slates_dict['SLATE_ID'].append(slate.id)
-		slates_dict['SLATE_TYPE'].append(DRAFTKINGS_SLATE_TYPE[slate.contest_type_id])
+		slates_dict['SLATE_ID'].append(slate['id'])
+		slates_dict['SLATE_TYPE'].append(DRAFTKINGS_SLATE_TYPE[slate['contest_type_id']])
 		slates_dict['START_TIMESTAMP'].append(slate_time)
+		slates_dict['SPORT'].append(slate['sport'])
+		slates_dict['GAMES_COUNT'].append(slate['games_count'])
 	slates_df = pd.DataFrame.from_dict(slates_dict)
 	slates_df.set_index('SLATE_ID')
-	slates_df.to_csv(GetExtractedDataPath() + '/draftkings/slates/%s.csv' % date.strftime('%Y-%m-%d'))
+	slates_df.to_csv(GetMetaDataPath() + '/draftkings/slates/%s.csv' % date.strftime('%Y-%m-%d'))
 	print ("Crawl DraftKings Slates for %s: " % date.strftime('%Y-%m-%d'))
 	print (slates_df)
 
 
 if __name__ == "__main__":
+	CreateDirectoryIfNotExist(GetMetaDataPath())
 	parser = OptionParser()
 	parser.add_option("-d", "--date", dest="date", default=datetime.today().strftime('%Y-%m-%d'))
 	parser.add_option("-s", "--start_date", dest="start_date", default="")
