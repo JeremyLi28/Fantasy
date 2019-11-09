@@ -14,6 +14,7 @@ setup(name='fantasy-basketball-toolkit',
           'nba_api',
           'draft-kings',
           'pandas',
-          'pytz'
+          'pytz',
+          'python-crontab'
       ],
       zip_safe=False)
