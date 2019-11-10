@@ -8,6 +8,6 @@ job = cron.new(command='python3 %s/fantasy-basketball-toolkit/data_crawler.py -t
 job.hour.every(12)
 
 for item in cron:
-    print item
+    print(item)
 
 cron.write()
