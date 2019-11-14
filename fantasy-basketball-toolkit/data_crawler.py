@@ -9,13 +9,14 @@ from nba_api.stats.endpoints import playergamelog
 import time
 import os
 from draft_kings.data import Sport
-from draft_kings.client import contests
+from draft_kings.client import contests, available_players
 from utils import CreateDirectoryIfNotExist, GetRawDataPath, DRAFTKINGS_SLATE_TYPE, GetMetaDataPath
 import pandas as pd
 import urllib3
 import pytz
+import logging
 
-home = './'
+home = '../'
 
 def daterange(start_date, end_date):
 	for n in range(int ((end_date - start_date).days)):
@@ -158,10 +159,17 @@ def DKCrawler():
 	slates_df.to_csv(GetMetaDataPath() + '/draftkings/slates/%s.csv' % date.strftime('%Y-%m-%d'))
 	print ("Crawl DraftKings Slates for %s: " % date.strftime('%Y-%m-%d'))
 	print (slates_df)
+	logging.info('test')
+
 
 
 if __name__ == "__main__":
 	CreateDirectoryIfNotExist(GetMetaDataPath())
+	logging.basicConfig(filename='/tmp/data_crawler.log',
+                            filemode='a',
+                            format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+                            datefmt='%H:%M:%S',
+                            level=logging.INFO)
 	parser = OptionParser()
 	parser.add_option("-d", "--date", dest="date", default=datetime.today().strftime('%Y-%m-%d'))
 	parser.add_option("-s", "--start_date", dest="start_date", default="")
