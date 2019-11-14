@@ -157,10 +157,8 @@ def DKCrawler():
 		slates_dict['GAMES_COUNT'].append(slate['games_count'])
 	slates_df = pd.DataFrame.from_dict(slates_dict)
 	slates_df.set_index('SLATE_ID')
-	output_path = GetMetaDataPath() + '/draftkings/slates/%s.csv' % date.strftime('%Y-%m-%d')
-	slates_df.to_csv(output_path)
-	logging.info(output_path)
-	logging.info("Crawl DraftKings Slates for %s: " % date.strftime('%Y-%m-%d'))
+	slates_df.to_csv(GetMetaDataPath() + '/draftkings/slates/%s.csv' % date.strftime('%Y-%m-%d'))
+	logging.info("Crawl DraftKings Slates for %s" % date.strftime('%Y-%m-%d'))
 	print(slates_df)
 
 
