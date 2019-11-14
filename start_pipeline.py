@@ -4,7 +4,7 @@ import os
 cwd = os.getcwd()
 
 cron = CronTab(user=True)
-job = cron.new(command='python3 %s/fantasy-basketball-toolkit/data_crawler.py -t \'DK\' ~/install.log 2>&1' % cwd)
+job = cron.new(command='cd %s/fantasy-basketball-toolkit && /usr/bin/python3 data_crawler.py -t \'DK\' >> /tmp/data_crawler.err 2>&1' % cwd)
 job.hour.every(12)
 
 for item in cron:
