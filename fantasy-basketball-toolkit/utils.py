@@ -3,7 +3,7 @@ from enum import Enum
 from datetime import datetime
 import pytz
 
-home = '../'
+home = os.getcwd() + '/../'
 metadata_path = home + 'data/metatdata'
 raw_data_path = home + 'data/raw'
 extracted_data_path = home + 'data/extractor'
