@@ -109,6 +109,7 @@ def DKCrawler():
 	if not dk_info['groups']:
 		print ("Slates Empty!")
 	date = dk_info['groups'][0]['starts_at'].astimezone(pytz.timezone('America/Los_Angeles')).date()
+	logging.info("======== DKCrawler for date %s ========" % date)
 	for slate in dk_info['groups']:
 		slate_date = slate['starts_at'].astimezone(pytz.timezone('America/Los_Angeles')).date()
 		if slate_date < date:
@@ -141,7 +142,7 @@ def DKCrawler():
 	contests_df = pd.DataFrame.from_dict(contests_dict)
 	contests_df.set_index('CONTEST_ID')
 	contests_df.to_csv(GetMetaDataPath() + '/draftkings/contests/%s.csv' % date.strftime('%Y-%m-%d'))
-	print ("Crawl DraftKings Contests for %s, # of contests: %d" % (date.strftime('%Y-%m-%d'), len(contests_df)))
+	logging.info("Crawl DraftKings Contests for %s, # of contests: %d" % (date.strftime('%Y-%m-%d'), len(contests_df)))
 
 	CreateDirectoryIfNotExist(GetMetaDataPath() + '/draftkings/slates')
 	slates_dict = {'SLATE_ID': [], 'SLATE_TYPE': [], 'START_TIMESTAMP': [], 'SPORT': [], 'GAMES_COUNT': []}
@@ -156,11 +157,11 @@ def DKCrawler():
 		slates_dict['GAMES_COUNT'].append(slate['games_count'])
 	slates_df = pd.DataFrame.from_dict(slates_dict)
 	slates_df.set_index('SLATE_ID')
-	slates_df.to_csv(GetMetaDataPath() + '/draftkings/slates/%s.csv' % date.strftime('%Y-%m-%d'))
-	print ("Crawl DraftKings Slates for %s: " % date.strftime('%Y-%m-%d'))
-	print (slates_df)
-	logging.info('test')
-
+	output_path = GetMetaDataPath() + '/draftkings/slates/%s.csv' % date.strftime('%Y-%m-%d')
+	slates_df.to_csv(output_path)
+	logging.info(output_path)
+	logging.info("Crawl DraftKings Slates for %s: " % date.strftime('%Y-%m-%d'))
+	print(slates_df)
 
 
 if __name__ == "__main__":
