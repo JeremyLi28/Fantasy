@@ -4,6 +4,7 @@ import os
 cwd = os.getcwd()
 
 cron = CronTab(user=True)
+cron.remove_all()
 dk_crawler_job = cron.new(command='cd %s/fantasy-basketball-toolkit && /usr/bin/python3 data_crawler.py -t \'DK\' >> /tmp/data_crawler.err 2>&1' % cwd)
 dk_crawler_job.every(12).hours()
 
