@@ -8,6 +8,7 @@ metadata_path = home + 'data/metatdata'
 raw_data_path = home + 'data/raw'
 extracted_data_path = home + 'data/extractor'
 
+
 class SlateType(Enum):
     CLASSIC = "CLASSIC"
     TIERS = "TIERS"
@@ -35,3 +36,7 @@ def ConvertTimestampStringToLocalDatetime(timestamp_string):
 		Output: datetime object in American/Los Angles timezone
 	'''
 	return datetime.strptime(timestamp_string[:-9],'%Y-%m-%dT%H:%M:%S').replace(tzinfo=pytz.utc).astimezone(pytz.timezone('America/Los_Angeles'))
+
+# Draftkings related util functions.
+def GetDKPlayersForSlateUrl(slate_id):
+	return 'https://www.draftkings.com/bulklineup/getdraftablecsv?draftGroupId=%s' % slate_id

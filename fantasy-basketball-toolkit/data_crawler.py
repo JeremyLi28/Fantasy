@@ -10,11 +10,12 @@ import time
 import os
 from draft_kings.data import Sport
 from draft_kings.client import contests, available_players
-from utils import CreateDirectoryIfNotExist, GetRawDataPath, DRAFTKINGS_SLATE_TYPE, GetMetaDataPath
+from utils import *
 import pandas as pd
 import urllib3
 import pytz
 import logging
+from urllib.request import urlopen
 
 home = '../'
 
@@ -114,6 +115,8 @@ def DKCrawler():
 		slate_date = slate['starts_at'].astimezone(pytz.timezone('America/Los_Angeles')).date()
 		if slate_date < date:
 			date = slate_date
+
+	# Crawl contest information.
 	CreateDirectoryIfNotExist(GetMetaDataPath() + '/draftkings/contests')
 	contests_dict = {'CONTEST_ID': [], 'SLATE_ID' : [], 'NAME': [], 'START_TIMESTAMP': [], 'SPORT': [], 'FANTASY_PLAYER_POINTS': [], \
 		'IS_GUARANTEED': [], 'IS_STARRED': [], 'IS_HEAD_TO_HEAD': [], 'IS_DOUBLE_UP': [], 'IS_FIFTY_FIFTY': [], 'TOTAL_ENTRIES': [], \
@@ -144,6 +147,7 @@ def DKCrawler():
 	contests_df.to_csv(GetMetaDataPath() + '/draftkings/contests/%s.csv' % date.strftime('%Y-%m-%d'))
 	logging.info("Crawl DraftKings Contests for %s, # of contests: %d" % (date.strftime('%Y-%m-%d'), len(contests_df)))
 
+	# Crawl slate information.
 	CreateDirectoryIfNotExist(GetMetaDataPath() + '/draftkings/slates')
 	slates_dict = {'SLATE_ID': [], 'SLATE_TYPE': [], 'START_TIMESTAMP': [], 'SPORT': [], 'GAMES_COUNT': []}
 	for slate in dk_info['groups']:
@@ -160,6 +164,46 @@ def DKCrawler():
 	slates_df.to_csv(GetMetaDataPath() + '/draftkings/slates/%s.csv' % date.strftime('%Y-%m-%d'))
 	logging.info("Crawl DraftKings Slates for %s" % date.strftime('%Y-%m-%d'))
 	print(slates_df)
+
+	# Crawl player information
+	CreateDirectoryIfNotExist(GetMetaDataPath() + '/draftkings/players')
+	players_dict =  {'NAME': [], 'DK_ID': [], 'POSITION': [], 'SALARY': [], 'SLATE_ID': [], 'GAME_INFO': [], 'TEAM': [], 'DKP': []}
+	for slate_id in slates_dict['SLATE_ID']:
+		lines = urlopen(GetDKPlayersForSlateUrl(slate_id))
+
+		# Header contains lineup position
+		header = next(lines).decode("utf-8")
+		start_column = 0
+		end_column = header.index('Instructions') - 2
+		lineup_positions = header[start_column:end_column].split(',')
+
+		# Go through instruction lines
+		while True:
+			line = next(lines).decode("utf-8")
+			if "Position" in line:
+				start_column = line.index("Position")
+				break
+
+		# Parse players data
+		for line in lines:
+			# POST data is in bytes
+			line = line.decode("utf-8")
+			fields = line[start_column:].split(',')
+			# For tier slate, set salary as 1
+			if len(fields) == 8:
+				fields.insert(5, 1)
+			players_dict['NAME'].append(fields[2])
+			players_dict['DK_ID'].append(fields[3])
+			players_dict['POSITION'].append(fields[4])
+			players_dict['SALARY'].append(fields[5])
+			players_dict['SLATE_ID'].append(slate_id)
+			players_dict['GAME_INFO'].append(fields[6])
+			players_dict['TEAM'].append(fields[7])
+			players_dict['DKP'].append(fields[8])
+	players_df = pd.DataFrame.from_dict(players_dict)
+	players_df.set_index('NAME')
+	players_df.to_csv(GetMetaDataPath() + '/draftkings/players/%s.csv' % date.strftime('%Y-%m-%d'))
+	logging.info("Crawl DraftKings Players for %s" % date.strftime('%Y-%m-%d'))
 
 
 if __name__ == "__main__":
