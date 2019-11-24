@@ -5,8 +5,8 @@ import os
 from optparse import OptionParser
 import datetime
 from datetime import timedelta, date, datetime
+from utils import *
 
-home = './'
 
 def daterange(start_date, end_date):
     for n in range(int ((end_date - start_date).days)):
@@ -15,7 +15,7 @@ def daterange(start_date, end_date):
 def RGExtractor(date):
 	player_path = home + 'data/crawler/rotogrinders/projections/%s.json' % (date)
 	if not os.path.isfile(player_path):
-		print "crawler data for %s not exist!" % date
+		print("crawler data for %s not exist!" % date)
 		return
 	player_json_data = json.loads(open(player_path, 'r').read())
 	player_dict = {'name' : [], 'position' : [], 'slate_id' : [], 'slate_type' : [], 'player_id' : [], 'salary' : [], 'points' : []}
@@ -23,7 +23,7 @@ def RGExtractor(date):
 	idx = 0
 	for data in player_json_data:
 		if data['import_data'] is None:
-			print 'None import_data for ' + data['player_name']
+			print('None import_data for ' + data['player_name'])
 			continue
 		for slate in data['import_data']:
 			player_dict['points'].append(slate['fpts'])
@@ -67,12 +67,12 @@ def RGExtractor(date):
 	slate_df = pd.DataFrame.from_dict(slate_dict)
 	slate_df.set_index('name', inplace=True)
 	slate_df.to_csv(home + 'data/extractor/rotogrinders/slates/%s.csv' % (date))
-	print "Extract RotogGinders data for %s" % (date)
-	print "========== Slate ========="
-	print slate_df
-	print "========= Projections %d ========" % len(player_df)
-	print player_df.head()
-	print "...."
+	print("Extract RotogGinders data for %s" % (date))
+	print("========== Slate =========")
+	print(slate_df)
+	print("========= Projections %d ========" % len(player_df))
+	print(player_df.head())
+	print("....")
 
 def GameLogExtractor(season, season_type):
 	crawler_game_log_path = home + 'data/crawler/nba_stats/player_game_log/2018-19'
@@ -93,7 +93,7 @@ def GameLogExtractor(season, season_type):
 	analysis_df['DKP/M_COV'] = analysis_df['DKP/M_STD'] / analysis_df['DKP/M']
 	analysis_df.set_index('Name', inplace=True)
 	analysis_df[['GP', 'DKP', 'DKP_COV', 'DKP/M', 'DKP/M_COV']].to_csv(home + 'data/extractor/stats/player_analysis.csv')
-	print "Extract NBA game log for %s %s" % (season, season_type)
+	print("Extract NBA game log for %s %s" % (season, season_type))
 
 def ResultExtractor(date):
 	results_dir = home + 'data/extractor/results'
@@ -117,7 +117,7 @@ def ResultExtractor(date):
 	slates_df = pd.DataFrame.from_dict(slates_dict)
 	slates_df.set_index('Id', inplace=True)
 	slates_df.to_csv(results_dir + '/slates/%s.csv' % date)
-	print "Extract results for %s" % date
+	print("Extract results for %s" % date)
 
 if __name__ == "__main__":
 	parser = OptionParser()
@@ -141,4 +141,4 @@ if __name__ == "__main__":
 			for date in daterange(datetime.strptime(options.start_date, '%Y-%m-%d'), datetime.strptime(options.end_date, '%Y-%m-%d')):
 				ResultExtractor(date.strftime('%Y-%m-%d'))
 	else:
-		print "Extractor type %s not supported yet." % options.crawler_type
+		print("Extractor type %s not supported yet." % options.crawler_type)

@@ -75,7 +75,7 @@ def ResultCrawler(date):
 		os.makedirs(results_dir + '/contests')
 	year, month, day = date.split('-')
 	slates_url = "https://resultsdb-api.rotogrinders.com/api//slates?start=%s/%s/%s" % (month, day, year)
-	r = urllib.urlopen(slates_url).read()
+	r = urlopen(slates_url).read()
 	slates = json.loads(r)
 	nba_slates = []
 	for slate in slates:
@@ -83,14 +83,14 @@ def ResultCrawler(date):
 			summary_url = 'https://resultsdb-api.rotogrinders.com/api//slates/%s/summary' % slate['_id']
 			summary = ""
 			try:
-				summary = json.loads(urllib.urlopen(summary_url).read())
+				summary = json.loads(urlopen(summary_url).read())
 			except ValueError as e:
 				print ("No summary find %s" % slate['_id'])
 			if summary != "":
 				slate['summary'] = summary
 			nba_slates.append(slate)
 	contests_url = 'https://resultsdb-api.rotogrinders.com/api//contests?start=%s/%s/%s&lean=true' % (month, day, year)
-	r = urllib.urlopen(contests_url).read()
+	r = urlopen(contests_url).read()
 	contests = json.loads(r)
 	nba_contests = []
 	for contest in contests:
