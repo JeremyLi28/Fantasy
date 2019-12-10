@@ -65,14 +65,11 @@ def GameLogCrawler(season, season_type):
 		time.sleep(1)
 	print ("Crawl NBA game log for %s %s" % (season, season_type))
 
-def ResultCrawler(date):
-	results_dir = home + 'data/crawler/results'
-	if not os.path.exists(results_dir):
-		os.makedirs(results_dir)
-	if not os.path.exists(results_dir + '/slates'):
-		os.makedirs(results_dir + '/slates')
-	if not os.path.exists(results_dir + '/contests'):
-		os.makedirs(results_dir + '/contests')
+def MoneyLineCrawler(date):
+	ml_dir = GetMetaDataPath() + '/draftkings/moneyline'
+	CreateDirectoryIfNotExist(ml_dir + '/contests/raw')
+	CreateDirectoryIfNotExist(ml_dir + '/slates/raw')
+
 	year, month, day = date.split('-')
 	slates_url = "https://resultsdb-api.rotogrinders.com/api//slates?start=%s/%s/%s" % (month, day, year)
 	r = urlopen(slates_url).read()
@@ -96,11 +93,11 @@ def ResultCrawler(date):
 	for contest in contests:
 		if contest['sport'] == 3:
 			nba_contests.append(contest)
-	with open(results_dir + '/slates/%s.json' % (date), 'w') as slate_json_file:
+	with open(ml_dir + '/slates/raw/%s.json' % (date), 'w') as slate_json_file:
 		json.dump(nba_slates, slate_json_file)
-	with open(results_dir + '/contests/%s.json' % (date), 'w') as contest_json_file:
+	with open(ml_dir + '/contests/raw/%s.json' % (date), 'w') as contest_json_file:
 		json.dump(nba_contests, contest_json_file)
-	print ("Crawl Result data for %s" % (date))
+	print ("Crawl MoneyLine data for %s" % (date))
 
 def DKCrawler():
 	CreateDirectoryIfNotExist(GetMetaDataPath() + '/draftkings')
@@ -227,12 +224,12 @@ if __name__ == "__main__":
 				RGCrawler(date.strftime('%Y-%m-%d'))
 	elif options.crawler_type == 'GameLog':
 		GameLogCrawler('2018-19', 'Regular Season')
-	elif options.crawler_type == 'Result':
+	elif options.crawler_type == 'ML':
 		if options.start_date == "" or options.end_date == "":
-			ResultCrawler(options.date)
+			MoneyLineCrawler(options.date)
 		else:
 			for date in daterange(datetime.strptime(options.start_date, '%Y-%m-%d'), datetime.strptime(options.end_date, '%Y-%m-%d')):
-				ResultCrawler(date.strftime('%Y-%m-%d'))
+				MoneyLineCrawler(date.strftime('%Y-%m-%d'))
 	elif options.crawler_type == 'DK':
 		DKCrawler()
 	else:

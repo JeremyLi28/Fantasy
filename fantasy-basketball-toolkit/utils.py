@@ -18,8 +18,11 @@ class SlateType(Enum):
 DRAFTKINGS_SLATE_TYPE = {70: SlateType.CLASSIC.name, 73: SlateType.TIERS.name, 81: SlateType.SHOWDOWN.name, 112: SlateType.IN_GAME_SHOWDOWN.name}
 
 def CreateDirectoryIfNotExist(path):
-	if not os.path.exists(path):
-		os.makedirs(path)
+	current_path = '.'
+	for directory in path.split('/'):
+		current_path = current_path + '/' + directory
+		if not os.path.exists(current_path):
+			os.makedirs(current_path)
 
 def GetMetaDataPath():
 	return metadata_path

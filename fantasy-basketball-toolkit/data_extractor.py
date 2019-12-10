@@ -95,17 +95,14 @@ def GameLogExtractor(season, season_type):
 	analysis_df[['GP', 'DKP', 'DKP_COV', 'DKP/M', 'DKP/M_COV']].to_csv(home + 'data/extractor/stats/player_analysis.csv')
 	print("Extract NBA game log for %s %s" % (season, season_type))
 
-def ResultExtractor(date):
-	results_dir = home + 'data/extractor/results'
-	if not os.path.exists(results_dir):
-		os.makedirs(results_dir)
-	if not os.path.exists(results_dir + '/slates'):
-		os.makedirs(results_dir + '/slates')
-	if not os.path.exists(results_dir + '/contests'):
-		os.makedirs(results_dir + '/contests')
-	slates_result_file = home + 'data/crawler/results/slates/%s.json' % date
+def MoneyLineExtractor(date):
+	ml_dir = GetMetaDataPath() + '/draftkings/moneyline'
+	CreateDirectoryIfNotExist(ml_dir + '/contests')
+	CreateDirectoryIfNotExist(ml_dir + '/slates')
+
+	slates_raw_file = ml_dir + '/slates/raw/%s.json' % date
 	slates_dict = {'Id' : [], 'GPPAvg': [], 'CashAvg': []}
-	slates = json.loads(open(slates_result_file, 'r').read())
+	slates = json.loads(open(slates_raw_file, 'r').read())
 	for slate in slates:
 		slates_dict['Id'].append(slate['siteSlateId'])
 		if 'summary' in slate:
@@ -116,8 +113,8 @@ def ResultExtractor(date):
 			slates_dict['CashAvg'].append(0)
 	slates_df = pd.DataFrame.from_dict(slates_dict)
 	slates_df.set_index('Id', inplace=True)
-	slates_df.to_csv(results_dir + '/slates/%s.csv' % date)
-	print("Extract results for %s" % date)
+	slates_df.to_csv(ml_dir + '/slates/%s.csv' % date)
+	print("Extract MoneyLine for %s" % date)
 
 if __name__ == "__main__":
 	parser = OptionParser()
@@ -134,11 +131,11 @@ if __name__ == "__main__":
 				RGExtractor(date.strftime('%Y-%m-%d'))
 	elif options.crawler_type == 'GameLog':
 		GameLogExtractor('2018-19', 'Regular Season')
-	elif options.crawler_type == 'Result':
+	elif options.crawler_type == 'ML':
 		if options.start_date == "" or options.end_date == "":
-			ResultExtractor(options.date)
+			MoneyLineExtractor(options.date)
 		else:
 			for date in daterange(datetime.strptime(options.start_date, '%Y-%m-%d'), datetime.strptime(options.end_date, '%Y-%m-%d')):
-				ResultExtractor(date.strftime('%Y-%m-%d'))
+				MoneyLineExtractor(date.strftime('%Y-%m-%d'))
 	else:
 		print("Extractor type %s not supported yet." % options.crawler_type)
