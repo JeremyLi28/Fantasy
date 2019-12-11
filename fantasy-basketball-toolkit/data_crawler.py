@@ -226,6 +226,8 @@ if __name__ == "__main__":
 		GameLogCrawler('2018-19', 'Regular Season')
 	elif options.crawler_type == 'ML':
 		if options.start_date == "" or options.end_date == "":
+			if options.date == datetime.today().strftime('%Y-%m-%d'):
+				options.date = (date.today() - timedelta(days=1)).strftime('%Y-%m-%d')
 			MoneyLineCrawler(options.date)
 		else:
 			for date in daterange(datetime.strptime(options.start_date, '%Y-%m-%d'), datetime.strptime(options.end_date, '%Y-%m-%d')):
