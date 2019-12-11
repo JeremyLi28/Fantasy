@@ -82,7 +82,7 @@ def MoneyLineCrawler(date):
 			try:
 				summary = json.loads(urlopen(summary_url).read())
 			except ValueError as e:
-				print ("No summary find %s" % slate['_id'])
+				logging.error("No summary find %s" % slate['_id'])
 			if summary != "":
 				slate['summary'] = summary
 			nba_slates.append(slate)
@@ -97,7 +97,7 @@ def MoneyLineCrawler(date):
 		json.dump(nba_slates, slate_json_file)
 	with open(ml_dir + '/contests/raw/%s.json' % (date), 'w') as contest_json_file:
 		json.dump(nba_contests, contest_json_file)
-	print ("Crawl MoneyLine data for %s" % (date))
+	logging.info("Crawl MoneyLine data for %s" % (date))
 
 def DKCrawler():
 	CreateDirectoryIfNotExist(GetMetaDataPath() + '/draftkings')
