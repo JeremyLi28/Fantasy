@@ -47,23 +47,21 @@ def RGCrawler(date):
 	print ("Crawl RotoGrinders data for %s" % (date))
 
 def GameLogCrawler(season, season_type):
-	game_log_dir = home + 'data/crawler/nba_stats/player_game_log/%s' % season
-	if not os.path.exists(game_log_dir):
-		os.makedirs(game_log_dir)
+	game_log_dir = GetMetaDataPath() + '/nba/player_game_log/%s/raw' % season
+	CreateDirectoryIfNotExist(game_log_dir)
 	
-	all_players_this_season = commonallplayers.CommonAllPlayers(is_only_current_season=1, league_id='00', season='2018-19').common_all_players.get_data_frame()
+	all_players_this_season = commonallplayers.CommonAllPlayers(is_only_current_season=1, league_id='00', season=season).common_all_players.get_data_frame()
 	
 	for index, row in all_players_this_season[['PERSON_ID', 'DISPLAY_FIRST_LAST']].iterrows():
 		player_id = row[0]
 		player_name = row[1]
-		print (player_name)
-		game_log = playergamelog.PlayerGameLog(player_id=player_id, season_all='2018-19', season_type_all_star=season_type).get_data_frames()[0]
+		game_log = playergamelog.PlayerGameLog(player_id=player_id, season_all=season, season_type_all_star=season_type).get_data_frames()[0]
 		double_count = game_log['PTS'].apply(lambda x: 1 if x >= 10 else 0) + game_log['REB'].apply(lambda x: 1 if x >= 10 else 0) + game_log['AST'].apply(lambda x: 1 if x >= 10 else 0) + game_log['STL'].apply(lambda x: 1 if x >= 10 else 0) + game_log['BLK'].apply(lambda x: 1 if x >= 10 else 0)
 		game_log['DKP'] = game_log['PTS'] + 0.5 * game_log['FG3M'] + 1.25 * game_log['REB'] + 1.5 * game_log['AST'] + 2 * (game_log['STL'] + game_log['BLK']) - 0.5 * game_log['TOV'] + double_count.apply(lambda x : 1.5 if x >= 2 else 0) + double_count.apply(lambda x : 3 if x >= 3 else 0)
 		game_log['GAME_DATE'] = game_log['GAME_DATE'].apply(lambda x: datetime.strptime(x, '%b %d, %Y').strftime('%Y-%m-%d'))
 		game_log.to_csv(game_log_dir + '/%s.csv' % player_name)
 		time.sleep(1)
-	print ("Crawl NBA game log for %s %s" % (season, season_type))
+	logging.info("Crawl NBA game log for %s %s" % (season, season_type))
 
 def MoneyLineCrawler(date):
 	ml_dir = GetMetaDataPath() + '/draftkings/moneyline'
@@ -100,7 +98,6 @@ def MoneyLineCrawler(date):
 	logging.info("Crawl MoneyLine data for %s" % (date))
 
 def DKCrawler():
-	CreateDirectoryIfNotExist(GetMetaDataPath() + '/draftkings')
 	dk_info = contests(sport=Sport.NBA)
 	if not dk_info['contests']:
 		print ("Contests Empty!")
@@ -215,6 +212,8 @@ if __name__ == "__main__":
 	parser.add_option("-s", "--start_date", dest="start_date", default="")
 	parser.add_option("-e", "--end_date", dest="end_date", default="")
 	parser.add_option("-t", dest="crawler_type", default='RG')
+	parser.add_option("--se", dest="season", default='2019-20')
+	parser.add_option("--st", dest="season_type", default='Regular Season')
 	(options, args) = parser.parse_args()
 	if options.crawler_type == 'RG':
 		if options.start_date == "" or options.end_date == "":
@@ -222,8 +221,8 @@ if __name__ == "__main__":
 		else:
 			for date in daterange(datetime.strptime(options.start_date, '%Y-%m-%d'), datetime.strptime(options.end_date, '%Y-%m-%d')):
 				RGCrawler(date.strftime('%Y-%m-%d'))
-	elif options.crawler_type == 'GameLog':
-		GameLogCrawler('2018-19', 'Regular Season')
+	elif options.crawler_type == 'GL':
+		GameLogCrawler(options.season, options.season_type)
 	elif options.crawler_type == 'ML':
 		if options.start_date == "" or options.end_date == "":
 			if options.date == datetime.today().strftime('%Y-%m-%d'):
