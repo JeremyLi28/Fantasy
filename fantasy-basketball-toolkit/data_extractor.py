@@ -13,65 +13,41 @@ def daterange(start_date, end_date):
         yield start_date + timedelta(n)
 
 def RGExtractor(date):
-	player_path = home + 'data/crawler/rotogrinders/projections/%s.json' % (date)
-	if not os.path.isfile(player_path):
-		print("crawler data for %s not exist!" % date)
+	rg_dir = GetMetaDataPath() + '/rotogrinders'
+	projection_path = rg_dir + '/projections/raw/%s.json' % (date)
+	if not os.path.isfile(projection_path):
+		print("RG crawler data for %s not exist!" % date)
 		return
-	player_json_data = json.loads(open(player_path, 'r').read())
-	player_dict = {'name' : [], 'position' : [], 'slate_id' : [], 'slate_type' : [], 'player_id' : [], 'salary' : [], 'points' : []}
-	showdown_player = {}
-	idx = 0
-	for data in player_json_data:
+	projection_json_data = json.loads(open(projection_path, 'r').read())
+	projection_dict = {'name' : [], 'points' : []}
+	for data in projection_json_data:
 		if data['import_data'] is None:
 			print('None import_data for ' + data['player_name'])
 			continue
 		for slate in data['import_data']:
-			player_dict['points'].append(slate['fpts'])
-			player_dict['slate_id'].append(slate['slate_id'])
-			slate_type = slate['type'] if 'type' in slate else 'missing'
-			player_dict['slate_type'].append(slate_type)
-			player_dict['player_id'].append(slate['player_id'])
-			player_dict['salary'].append(slate['salary'])
-			# rotogrinders doesn't have CPT/UTIL position data for showdown captain mode
-			if slate_type == 'showdown captain mode':
-				if data['player_name'] not in showdown_player:
-					showdown_player[data['player_name']] = idx
-					player_dict['position'].append(slate['position'])
-					player_dict['name'].append(data['player_name'])
-				else:
-					old_idx = showdown_player[data['player_name']]
-					if int(player_dict['salary'][old_idx]) > int(slate['salary']):
-						player_dict['position'][old_idx] = 'CPT'
-						player_dict['position'].append('UTIL')
-						player_dict['name'][old_idx] = player_dict['name'][old_idx] + '_cpt'
-						player_dict['name'].append(data['player_name'])
-					else:
-						player_dict['position'][old_idx] = 'UTIL'
-						player_dict['position'].append('CPT')
-						player_dict['name'].append(data['player_name'] + '_cpt')
-			else:
-				player_dict['position'].append(slate['position'])
-				player_dict['name'].append(data['player_name'])
-			idx += 1	   
-	player_df = pd.DataFrame.from_dict(player_dict)
-	player_df.set_index('name', inplace=True)
-	player_df.to_csv(home + 'data/extractor/rotogrinders/projections/%s.csv' % (date))
+			projection_dict['name'].append(data['player_name'])
+			projection_dict['points'].append(slate['fpts'])
+			break
+	   
+	projection_df = pd.DataFrame.from_dict(projection_dict)
+	projection_df.set_index('name', inplace=True)
+	projection_df.to_csv(rg_dir + '/projections/%s.csv' % (date))
 
-	slate_path = home + 'data/crawler/rotogrinders/slates/%s.json' % (date)
+	slate_path = rg_dir + '/slates/raw/%s.json' % (date)
 	slate_json_data = json.loads(open(slate_path, 'r').read())
 	slate_dict = {'date' : [], 'name' : [], 'id' : []}
-	for key, value in slate_json_data.iteritems():
+	for key, value in slate_json_data.items():
 		slate_dict['date'].append(value['date'])
-		slate_dict['name'].append(key);
+		slate_dict['name'].append(key)
 		slate_dict['id'].append(value['importId'] if key != 'All Games' else '0')
 	slate_df = pd.DataFrame.from_dict(slate_dict)
 	slate_df.set_index('name', inplace=True)
-	slate_df.to_csv(home + 'data/extractor/rotogrinders/slates/%s.csv' % (date))
+	slate_df.to_csv(rg_dir + '/slates/%s.csv' % (date))
 	print("Extract RotogGinders data for %s" % (date))
 	print("========== Slate =========")
 	print(slate_df)
-	print("========= Projections %d ========" % len(player_df))
-	print(player_df.head())
+	print("========= Projections %d ========" % len(projection_df))
+	print(projection_df.head())
 	print("....")
 
 def GameLogExtractor(season, season_type):

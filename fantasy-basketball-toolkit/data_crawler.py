@@ -13,6 +13,7 @@ from draft_kings.client import contests, available_players
 from utils import *
 import pandas as pd
 import urllib3
+import requests
 import pytz
 import logging
 from urllib.request import urlopen
@@ -24,27 +25,30 @@ def daterange(start_date, end_date):
 		yield start_date + timedelta(n)
 
 def RGCrawler(date):
+	rg_dir = GetMetaDataPath() + '/rotogrinders'
+	CreateDirectoryIfNotExist(rg_dir + '/slates/raw')
+	CreateDirectoryIfNotExist(rg_dir + '/projections/raw')
+
 	url = 'https://rotogrinders.com/projected-stats/nba-player?site=draftkings&sport=nba&date=%s' % (date)
-	opener = urllib3.build_opener()
-	cookie = open(home + 'cookie.txt').read()
-	opener.addheaders.append(('Cookie', cookie))
-	r = opener.open(url).read()
+	cookie = open('cookie.txt').read()
+	r = requests.get(url, headers={'Cookie' : cookie}).content
+
 	soup = BeautifulSoup(r, features="html.parser")
 	# Have 2 scripts tag, we use the 2nd for now, the usage of first need to be further investigated, related to vegas money line
 	script_tags = soup.find('section', {'class' : 'pag bdy'}).findAll('script')
 	if len(script_tags) < 3:
-		print ("Invalid date: %s" % date)
+		print("Invalid date: %s" % date)
 		return
 	player_data = script_tags[2].text.split('\n')[2].strip().split('=')[1].strip()[:-1]
 	slate_data = script_tags[1].text.split('\n')[4].strip().split('slates: ')[1][:-1]
 	schedule_data = script_tags[1].text.split('\n')[5].strip().split('schedules: ')[1][:-1]
 	player_json_data = json.loads(player_data)
 	slate_json_data = json.loads(slate_data)
-	with open(home + 'data/crawler/rotogrinders/slates/%s.json' % (date), 'w') as slate_json_file:
+	with open(rg_dir + '/slates/raw/%s.json' % (date), 'w') as slate_json_file:
 		json.dump(slate_json_data, slate_json_file)
-	with open(home + 'data/crawler/rotogrinders/projections/%s.json' % (date), 'w') as player_json_file:
+	with open(rg_dir + '/projections/raw/%s.json' % (date), 'w') as player_json_file:
 		json.dump(player_json_data, player_json_file)
-	print ("Crawl RotoGrinders data for %s" % (date))
+	print("Crawl RotoGrinders data for %s" % (date))
 
 def GameLogCrawler(season, season_type):
 	game_log_dir = GetMetaDataPath() + '/nba/player_game_log/%s/raw' % season
