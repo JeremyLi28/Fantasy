@@ -192,7 +192,7 @@ def DKCrawler():
 				fields.insert(5, 1)
 			players_dict['NAME'].append(fields[2])
 			players_dict['DK_ID'].append(fields[3])
-			players_dict['POSITION'].append(fields[4])
+			players_dict['POSITION'].append(fields[0])
 			players_dict['SALARY'].append(fields[5])
 			players_dict['SLATE_ID'].append(slate_id)
 			players_dict['GAME_INFO'].append(fields[6])
@@ -212,7 +212,7 @@ if __name__ == "__main__":
                             datefmt='%H:%M:%S',
                             level=logging.INFO)
 	parser = OptionParser()
-	parser.add_option("-d", "--date", dest="date", default=datetime.today().strftime('%Y-%m-%d'))
+	parser.add_option("-d", "--date", dest="date", default=datetime.today().astimezone(pytz.timezone('America/Los_Angeles')).strftime('%Y-%m-%d'))
 	parser.add_option("-s", "--start_date", dest="start_date", default="")
 	parser.add_option("-e", "--end_date", dest="end_date", default="")
 	parser.add_option("-t", dest="crawler_type", default='RG')

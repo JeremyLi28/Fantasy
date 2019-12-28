@@ -6,6 +6,7 @@ from optparse import OptionParser
 import datetime
 from datetime import timedelta, date, datetime
 from utils import *
+import pytz
 
 
 def daterange(start_date, end_date):
@@ -19,14 +20,14 @@ def RGExtractor(date):
 		print("RG crawler data for %s not exist!" % date)
 		return
 	projection_json_data = json.loads(open(projection_path, 'r').read())
-	projection_dict = {'name' : [], 'points' : []}
+	projection_dict = {'NAME' : [], 'PROJECTION' : []}
 	for data in projection_json_data:
 		if data['import_data'] is None:
 			print('None import_data for ' + data['player_name'])
 			continue
 		for slate in data['import_data']:
-			projection_dict['name'].append(data['player_name'])
-			projection_dict['points'].append(slate['fpts'])
+			projection_dict['NAME'].append(data['player_name'])
+			projection_dict['PROJECTION'].append(slate['fpts'])
 			break
 	   
 	projection_df = pd.DataFrame.from_dict(projection_dict)
@@ -94,7 +95,7 @@ def MoneyLineExtractor(date):
 
 if __name__ == "__main__":
 	parser = OptionParser()
-	parser.add_option("-d", "--date", dest="date", default=datetime.today().strftime('%Y-%m-%d'))
+	parser.add_option("-d", "--date", dest="date", default=datetime.today().astimezone(pytz.timezone('America/Los_Angeles')).strftime('%Y-%m-%d'))
 	parser.add_option("-s", "--start_date", dest="start_date", default="")
 	parser.add_option("-e", "--end_date", dest="end_date", default="")
 	parser.add_option("-t", dest="crawler_type", default='RG')
