@@ -10,7 +10,7 @@ from draftfast.optimize import run
 from draftfast.orm import Player
 from utils import *
 
-def Optimize(date, top_k, slate_id, projection_source):
+def Optimize(date, top_k, slate_id, projection_source = 'rotogrinders'):
 	projections_path = GetMetaDataPath() + '/rotogrinders/projections/%s.csv' % (date)
 	if not os.path.exists(projections_path):
 		print("projections for %s not exists" % date)
@@ -54,4 +54,4 @@ if __name__ == "__main__":
 	parser.add_option("-k", "--top_k", dest="top_k", default=2)
 	parser.add_option("-s", "--slate", dest="slate_id")
 	(options, args) = parser.parse_args()
-	Optimize('rotogrinders', options.date, options.top_k, int(options.slate_id))
+	Optimize(options.date, options.top_k, int(options.slate_id))
