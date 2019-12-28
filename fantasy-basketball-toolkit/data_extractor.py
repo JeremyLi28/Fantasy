@@ -31,18 +31,18 @@ def RGExtractor(date):
 			break
 	   
 	projection_df = pd.DataFrame.from_dict(projection_dict)
-	projection_df.set_index('name', inplace=True)
+	projection_df.set_index('NAME', inplace=True)
 	projection_df.to_csv(rg_dir + '/projections/%s.csv' % (date))
 
 	slate_path = rg_dir + '/slates/raw/%s.json' % (date)
 	slate_json_data = json.loads(open(slate_path, 'r').read())
-	slate_dict = {'date' : [], 'name' : [], 'id' : []}
+	slate_dict = {'DATE' : [], 'NAME' : [], 'ID' : []}
 	for key, value in slate_json_data.items():
-		slate_dict['date'].append(value['date'])
-		slate_dict['name'].append(key)
-		slate_dict['id'].append(value['importId'] if key != 'All Games' else '0')
+		slate_dict['DATE'].append(value['date'])
+		slate_dict['NAME'].append(key)
+		slate_dict['ID'].append(value['importId'] if key != 'All Games' else '0')
 	slate_df = pd.DataFrame.from_dict(slate_dict)
-	slate_df.set_index('name', inplace=True)
+	slate_df.set_index('NAME', inplace=True)
 	slate_df.to_csv(rg_dir + '/slates/%s.csv' % (date))
 	print("Extract RotogGinders data for %s" % (date))
 	print("========== Slate =========")
