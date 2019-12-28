@@ -6,7 +6,7 @@ import os
 from optparse import OptionParser
 import datetime
 from draftfast import rules
-from draftfast.optimize import run
+from draftfast.optimize import run, run_multi
 from draftfast.orm import Player
 from utils import *
 
@@ -51,7 +51,8 @@ def Optimize(date, top_k, slate_id, projection_source = 'rotogrinders'):
 								matchup=data['GAME_INFO'],
 								average_score=data['DKP'],))
 
-	roster = run(
+	roster = run_multi(
+		iterations=top_k,
 		rule_set=rules.DK_NBA_RULE_SET,
 		player_pool=player_pool,
 		verbose=True,
