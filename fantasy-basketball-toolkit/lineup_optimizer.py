@@ -40,7 +40,16 @@ def Optimize(date, top_k, slate_id, projection_source = 'rotogrinders'):
 	player_pool = []
 	for name, data in players_with_projection.iterrows():
 		for pos in data['POSITION'].split('/'):
-			player_pool.append(Player(name = name, cost = data['SALARY'], proj = data['PROJECTION'], pos = pos))
+			player_pool.append(Player(
+								name=name,
+								cost=data['SALARY'],
+								proj=data['PROJECTION'],
+								pos=pos,
+								possible_positions=data['POSITION'],
+								multi_position='/' in data['POSITION'],
+								team=data['TEAM'],
+								matchup=data['GAME_INFO'],
+								average_score=data['DKP'],))
 
 	roster = run(
 		rule_set=rules.DK_NBA_RULE_SET,
