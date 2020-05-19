@@ -4,6 +4,7 @@ from datetime import datetime
 import pytz
 
 home = '../'
+data_path = home + 'data'
 metadata_path = home + 'data/metatdata'
 raw_data_path = home + 'data/raw'
 extracted_data_path = home + 'data/extractor'

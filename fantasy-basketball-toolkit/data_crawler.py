@@ -17,6 +17,7 @@ import requests
 import pytz
 import logging
 from urllib.request import urlopen
+import dateutil.parser
 
 home = '../'
 
@@ -202,6 +203,43 @@ def DKCrawler():
 	players_df.set_index('NAME')
 	players_df.to_csv(GetMetaDataPath() + '/draftkings/players/%s.csv' % date.strftime('%Y-%m-%d'))
 	logging.info("Crawl DraftKings Players for %s" % date.strftime('%Y-%m-%d'))
+
+def DailyPlayerStatsCrawler(date, overwrite):
+	"""Crawl daily player stats from ResultDB and Basketball Reference
+
+	Args:
+		date: datetime
+
+	Output:
+		DailyPlayerStatas: CSV file
+		Slate: CSV file
+		Player: CSV file
+	"""
+	year, month, day = date.split('-')
+	resultsdb_api_root = "https://resultsdb-api.rotogrinders.com/api//"
+	resultsdb_api_slates = resultsdb_api_root + "slates?start=%s/%s/%s" % (month, day, year)
+	slates = json.loads(requests.get(resultsdb_api_slates).content)
+	slates_dict = {'SlateId' : [], 'SlateType': [], 'GameCount': [], 'StartTime': [], 'GPPAvg': [], 'CashAvg': []}
+	for slate in slates:
+		if slate['sport'] == 3:
+			slates_dict['SlateId'].append(slate['siteSlateId'])
+			slates_dict['SlateType'].append(DRAFTKINGS_SLATE_TYPE[slate['slateType']])
+			slates_dict['GameCount'].append(slate['gameCount'])
+			slates_dict['StartTime'].append(dateutil.parser.parse(slate['start']).astimezone(pytz.timezone('America/Los_Angeles')))
+			summary_url = 'https://resultsdb-api.rotogrinders.com/api//slates/%s/summary' % slate['_id']
+			summary = ""
+			try:
+				summary = json.loads(requests.get(summary_url).content)
+			except ValueError as e:
+				logging.error("No summary find %s" % slate['_id'])
+			if summary != "":
+				slates_dict['GPPAvg'].append(summary['gppAverage'])
+				slates_dict['CashAvg'].append(summary['cashAverage'])
+			else:
+				slates_dict['GPPAvg'].append(0)
+				slates_dict['CashAvg'].append(0)
+	slates_df = pd.DataFrame.from_dict(slates_dict)
+	slates_df.set_index('SlateId', inplace=True)
 
 
 if __name__ == "__main__":
