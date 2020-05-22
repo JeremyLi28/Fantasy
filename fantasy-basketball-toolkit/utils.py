@@ -15,6 +15,8 @@ class SlateType(Enum):
     TIERS = "TIERS"
     SHOWDOWN = "SHOWDOWN"
     IN_GAME_SHOWDOWN = 'IN_GAME_SHOWDOWN'
+class ProjectionType(Enum):
+	ROTO_GRINDERS = 'ROTO_GRINDERS'
 
 DRAFTKINGS_SLATE_TYPE = {70: SlateType.CLASSIC.name, 73: SlateType.TIERS.name, 81: SlateType.SHOWDOWN.name, 112: SlateType.IN_GAME_SHOWDOWN.name}
 
