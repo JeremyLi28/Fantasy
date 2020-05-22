@@ -18,6 +18,7 @@ import pytz
 import logging
 from urllib.request import urlopen
 import dateutil.parser
+from basketball_reference_web_scraper import client
 
 home = '../'
 
@@ -264,6 +265,7 @@ def DailyPlayerStatsCrawler(date, overwrite=False):
 	players_df.set_index('PlayerName')
 
 	#Basketball reference
+	player_stats = pd.DataFrame(client.player_box_scores(day=day, month=month, year=year))
 
 
 
